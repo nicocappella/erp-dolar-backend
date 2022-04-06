@@ -6,7 +6,6 @@ import { ClientModule } from './client/client.module';
 import { UserModule } from './user/user.module';
 import { OperatorModule } from './operator/operator.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { OperationModule } from './operation/operation.module';
@@ -15,6 +14,8 @@ import { BalanceModule } from './balance/balance.module';
 import { MovementModule } from './movement/movement.module';
 import { PassportModule } from '@nestjs/passport';
 import { NODE_ENV } from './app.constants';
+import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { NODE_ENV } from './app.constants';
         NODE_ENV: Joi.string()
           .required()
           .valid(NODE_ENV.DEVELOPMENT, NODE_ENV.PRODUCTION),
+        SESSION_SECRET: Joi.string().required(),
       }),
     }),
     PassportModule.register({
@@ -44,6 +46,9 @@ import { NODE_ENV } from './app.constants';
     MovementModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: 'APP_GUARD', useClass: JwtAuthGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: CookieAuthenticationGuard },
+  ],
 })
 export class AppModule {}

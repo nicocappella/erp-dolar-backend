@@ -3,7 +3,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './services/auth.service';
 import { JwtConstants } from './constants';
-import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UserService } from 'src/user/user.service';
 import { SessionSerializer } from './services/session.serializer';
@@ -20,13 +19,7 @@ import { AuthController } from './auth.controller';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [
-    AuthService,
-    UserService,
-    LocalStrategy,
-    JwtStrategy,
-    SessionSerializer,
-  ],
+  providers: [AuthService, UserService, LocalStrategy, SessionSerializer],
   exports: [AuthService],
   controllers: [AuthController],
 })

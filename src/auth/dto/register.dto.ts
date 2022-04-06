@@ -1,7 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @IsString()
   readonly name: string;
 

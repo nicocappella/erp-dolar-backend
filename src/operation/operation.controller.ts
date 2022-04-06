@@ -25,6 +25,14 @@ export class OperationController {
   async getOperation(@Param('id') id: string) {
     return this.operationService.findOne(id);
   }
+  @Get('client/:id')
+  async getByClient(@Param('id') client: string) {
+    return this.operationService.findByClient(client);
+  }
+  @Get('operator/:id')
+  async getByOperator(@Param('id') operator: string) {
+    return this.operationService.findByOperator(operator);
+  }
 
   @Post()
   async createPost(

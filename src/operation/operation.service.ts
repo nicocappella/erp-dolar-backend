@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Error, Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
-import { Balance, BalanceDocument } from 'src/balance/schema/balance.schema';
 import { CreateOperationDto } from './dto/create-operation.dto';
 import { UpdateOperationDto } from './dto/update-operation.dto';
 import { Operation, OperationDocument } from './schema/operation.schema';
@@ -24,7 +23,24 @@ export class OperationService {
       .populate({ path: 'refCurrency' })
       .exec();
   }
-
+  async findByClient(client: string): Promise<Operation[]> {
+    return this.operationModel
+      .find({ client })
+      .populate({ path: 'client' })
+      .populate({ path: 'operator' })
+      .populate({ path: 'listedCurrency' })
+      .populate({ path: 'refCurrency' })
+      .exec();
+  }
+  async findByOperator(operator: string): Promise<Operation[]> {
+    return this.operationModel
+      .find({ operator })
+      .populate({ path: 'client' })
+      .populate({ path: 'operator' })
+      .populate({ path: 'listedCurrency' })
+      .populate({ path: 'refCurrency' })
+      .exec();
+  }
   async findOne(id: string): Promise<Operation> {
     return this.operationModel
       .findById(id)
@@ -69,7 +85,7 @@ export class OperationService {
     id: string,
     updateOperationDto: UpdateOperationDto,
   ): Promise<Operation> {
-    const operation = await this.operationModel.findById(id);
+    const oldOperation = await this.operationModel.findById(id);
     const existingOperation = await this.operationModel
       .findByIdAndUpdate(
         id,
@@ -84,30 +100,41 @@ export class OperationService {
     if (!existingOperation) {
       throw new NotFoundException(`Operation ${id} not found`);
     }
-    if (updateOperationDto.state) {
-      const key =
-        updateOperationDto.state === 'Ejecutada' ? 'executed' : 'closed';
-      const antiKey = key === 'executed' ? 'closed' : 'executed';
+    if (oldOperation) {
+      const { refCurrency, listedCurrency, operation, buy, sell, state } =
+        oldOperation;
+      const deletedBuy = operation === 'Compra' ? listedCurrency : refCurrency;
+      const deletedSell = operation === 'Compra' ? refCurrency : listedCurrency;
+      const currentState = state === 'Cerrada' ? 'closed' : 'executed';
+      await this.balanceService.createOrUpdate(deletedBuy.toString(), {
+        currency: deletedBuy.toString(),
+        [currentState]: -buy,
+      });
+      await this.balanceService.createOrUpdate(deletedSell.toString(), {
+        currency: deletedSell.toString(),
+        [currentState]: sell,
+      });
+      const { listedCurrency: listedCurr, refCurrency: refCurr } =
+        existingOperation;
+      const amountListedCurrency =
+        existingOperation.operation === 'Compra'
+          ? existingOperation.buy
+          : -existingOperation.sell;
+      const amountRefCurrency =
+        existingOperation.operation === 'Compra'
+          ? -existingOperation.sell
+          : existingOperation.buy;
+      const stateUpdated =
+        existingOperation.state === 'Cerrada' ? 'closed' : 'executed';
 
-      if (operation) {
-        if (operation.state === updateOperationDto.state) return operation;
-        const { listedCurrency, refCurrency } = operation;
-        const amountListedCurrency =
-          operation.operation === 'Compra' ? operation.buy : -operation.sell;
-        const amountRefCurrency =
-          operation.operation === 'Compra' ? -operation.sell : operation.buy;
-
-        await this.balanceService.createOrUpdate(listedCurrency.toString(), {
-          currency: listedCurrency.toString(),
-          [key]: amountListedCurrency,
-          [antiKey]: -amountListedCurrency,
-        });
-        await this.balanceService.createOrUpdate(refCurrency.toString(), {
-          currency: refCurrency.toString(),
-          [key]: amountRefCurrency,
-          [antiKey]: -amountRefCurrency,
-        });
-      }
+      await this.balanceService.createOrUpdate(listedCurr.toString(), {
+        currency: listedCurrency.toString(),
+        [stateUpdated]: amountListedCurrency,
+      });
+      await this.balanceService.createOrUpdate(refCurr.toString(), {
+        currency: refCurrency.toString(),
+        [stateUpdated]: amountRefCurrency,
+      });
     }
     return existingOperation;
   }
@@ -116,6 +143,21 @@ export class OperationService {
     const deletedOperation = await this.operationModel
       .findByIdAndDelete(id)
       .exec();
+    if (deletedOperation) {
+      const { refCurrency, listedCurrency, operation, buy, sell, state } =
+        deletedOperation;
+      const deletedBuy = operation === 'Compra' ? listedCurrency : refCurrency;
+      const deletedSell = operation === 'Compra' ? refCurrency : listedCurrency;
+      const currentState = state === 'Cerrada' ? 'closed' : 'executed';
+      await this.balanceService.createOrUpdate(deletedBuy.toString(), {
+        currency: deletedBuy.toString(),
+        [currentState]: -buy,
+      });
+      await this.balanceService.createOrUpdate(deletedSell.toString(), {
+        currency: deletedSell.toString(),
+        [currentState]: sell,
+      });
+    }
     if (!deletedOperation) {
       throw new NotFoundException(`Operation ${id} not found`);
     }

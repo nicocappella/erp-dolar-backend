@@ -16,11 +16,6 @@ export class UserController {
   async getUser(@Param('username') username: string) {
     return this.userService.findOne(username);
   }
-  @Public()
-  @Post('signup')
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createOne(createUserDto);
-  }
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     return this.userService.deleteOne(id);

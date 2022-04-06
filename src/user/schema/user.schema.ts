@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { hash } from 'bcryptjs';
+import { ExcludeProperty } from 'nestjs-mongoose-exclude';
 
 export type UserDocument = User & Document;
 
@@ -8,7 +8,7 @@ export type UserDocument = User & Document;
 export class User extends Document {
   @Prop({
     type: String,
-    // required: true,
+    required: true,
     trim: true,
   })
   name: string;
@@ -28,29 +28,14 @@ export class User extends Document {
     trim: true,
     minlength: 8,
   })
+  @ExcludeProperty()
   password: string;
 
   @Prop({
     type: [String],
+    default: ['admin'],
   })
   roles: string[];
 }
 
-const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.methods.toJSON = function (this: User) {
-  const userObject = this.toObject();
-
-  delete userObject.password;
-
-  return userObject;
-};
-
-UserSchema.pre('save', async function (this: User, next) {
-  if (this.isModified('password')) {
-    this.password = await hash(this.password, 8);
-  }
-  next();
-});
-
-export { UserSchema };
+export const UserSchema = SchemaFactory.createForClass(User);

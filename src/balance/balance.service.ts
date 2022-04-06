@@ -81,6 +81,11 @@ export class BalanceService {
     if (!existingBalance) {
       return await this.createOne(createBalanceDto);
     }
+    if (existingBalance.closed === 0 && existingBalance.executed === 0) {
+      await this.balanceModel.findOneAndDelete({
+        currency: existingBalance.currency,
+      });
+    }
     return existingBalance;
   }
 }

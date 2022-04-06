@@ -6,6 +6,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
+import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
 const MongoStore = require('connect-mongo');
 
 async function bootstrap() {
@@ -20,6 +21,7 @@ async function bootstrap() {
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
   const mongoPort = configService.get<number>('MONGO_PORT');
   const mongoDbName = configService.get<string>('MONGO_DATABASE');
+  const sessionSecret = configService.get<string>('SESSION_SECRET');
   app.setGlobalPrefix('/api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -32,7 +34,7 @@ async function bootstrap() {
   app.use(
     session({
       name: 'nest-js-api',
-      secret: 'my-secret',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -50,7 +52,7 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
-  // app.use(csurf());
+  // app.use(csurf());console.log(res);
   await app.listen(4000);
 }
 bootstrap();
