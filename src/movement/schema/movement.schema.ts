@@ -14,6 +14,14 @@ export class Movement {
   })
   currency: Currency;
 
+  @Prop({
+    type: String,
+    required: true,
+    trim: true,
+    enum: ['Agregar', 'Retirar'],
+  })
+  type: number;
+
   @Prop({ type: Number, required: true })
   total: number;
 }

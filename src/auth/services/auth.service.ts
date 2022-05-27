@@ -6,19 +6,23 @@ import {
 import { UserService } from 'src/user/user.service';
 import { hash, compare } from 'bcryptjs';
 import { RegisterUserDto } from '../dto/register.dto';
+import { User } from 'src/user/schema/user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService) {}
 
-  async register(registrationData: RegisterUserDto) {
+  async register(registrationData: RegisterUserDto, user: User) {
     const hashedPassword = await hash(registrationData.password, 10);
 
     try {
-      return this.userService.createOne({
-        ...registrationData,
-        password: hashedPassword,
-      });
+      return this.userService.createOne(
+        {
+          ...registrationData,
+          password: hashedPassword,
+        },
+        user,
+      );
     } catch (error) {
       throw new InternalServerErrorException('Something went wrong');
     }

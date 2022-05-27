@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { compare } from 'bcryptjs';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schema/user.schema';
 
 @Injectable()
@@ -27,11 +27,16 @@ export class UserService {
     }
     throw new NotFoundException('User not found');
   }
-  async createOne(createUserDto: CreateUserDto): Promise<User> {
-    const createUser = new this.userModel(createUserDto);
-    await createUser.save();
-
-    return createUser;
+  async createOne(createUserDto: CreateUserDto, user: User): Promise<User> {
+    if (user.roles.find((d) => d === 'admin')) {
+      const createUser = new this.userModel(createUserDto);
+      await createUser.save();
+      return createUser;
+    }
+    return null;
+  }
+  async updateOne(updateUserDto: UpdateUserDto): Promise<User> {
+    return null;
   }
 
   async deleteOne(id: string): Promise<User> {

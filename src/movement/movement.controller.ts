@@ -21,8 +21,8 @@ export class MovementController {
   }
 
   @Post()
-  async createMovement(@Body() createMovementDto: CreateMovementDto) {
-    return this.movementService.createOne(createMovementDto);
+  async createMovement(@Body() createMovementDto: CreateMovementDto[]) {
+    return this.movementService.createMany(createMovementDto);
   }
 
   @Patch(':id')

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
+import { CurrencyService } from 'src/currency/currency.service';
 import {
   Currency,
   CurrencyDocument,
@@ -14,23 +15,39 @@ import { Movement, MovementDocument } from './schema/movement.schema';
 export class MovementService {
   constructor(
     @InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
-    @InjectModel(Currency.name) private currencyModel: Model<CurrencyDocument>,
     private balanceService: BalanceService,
+    private currencyService: CurrencyService,
   ) {}
 
   async findAll(): Promise<Movement[]> {
-    return this.movementModel.find().exec();
+    return this.movementModel.find().populate({ path: 'currency' }).exec();
   }
 
-  async createOne(createMovementDto: CreateMovementDto): Promise<Movement> {
-    const { currency, total: executed } = createMovementDto;
-    const existingCurrency = await this.currencyModel.findById(currency);
-    if (!existingCurrency) {
-      throw new NotFoundException(`Currency doesn't exist`);
-    }
-    const createMovement = new this.movementModel(createMovementDto);
-    await this.balanceService.createOrUpdate(currency, { currency, executed });
-    return createMovement.save();
+  async createMany(
+    createMovementsDto: CreateMovementDto[],
+  ): Promise<Movement[]> {
+    const newMovementsDto: CreateMovementDto[] = [];
+    await Promise.all(
+      createMovementsDto.map(async (movement) => {
+        const { currency, type } = movement;
+        let { total: executed } = movement;
+        await this.currencyService.findById(currency);
+        executed =
+          (type === 'Agregar' && executed > 0) ||
+          (type === 'Retirar' && executed < 0)
+            ? executed
+            : executed * -1;
+        newMovementsDto.push({ ...movement, total: executed });
+      }),
+    );
+    const createMovements = this.movementModel.insertMany(newMovementsDto);
+    newMovementsDto.forEach((d) =>
+      this.balanceService.createOrUpdate(d.currency, {
+        currency: d.currency,
+        executed: d.total,
+      }),
+    );
+    return createMovements;
   }
 
   async updateOne(

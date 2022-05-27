@@ -33,7 +33,7 @@ export class User extends Document {
 
   @Prop({
     type: [String],
-    default: ['admin'],
+    default: ['operator'],
   })
   roles: string[];
 }

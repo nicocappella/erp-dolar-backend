@@ -17,8 +17,8 @@ export class OperationController {
   constructor(private operationService: OperationService) {}
 
   @Get()
-  async getOperations() {
-    return this.operationService.findAll();
+  async getOperations(@Param(':date') date: string) {
+    return this.operationService.findAll(date);
   }
 
   @Get(':id')

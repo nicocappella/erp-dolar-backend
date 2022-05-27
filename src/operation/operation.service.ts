@@ -14,7 +14,7 @@ export class OperationService {
     private balanceService: BalanceService,
   ) {}
 
-  async findAll(): Promise<Operation[]> {
+  async findAll(date: string): Promise<Operation[]> {
     return this.operationModel
       .find()
       .populate({ path: 'client' })

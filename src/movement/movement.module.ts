@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BalanceModule } from 'src/balance/balance.module';
-import { Currency, CurrencySchema } from 'src/currency/schema/currency.schema';
+import { CurrencyModule } from 'src/currency/currency.module';
 import { MovementController } from './movement.controller';
 import { MovementService } from './movement.service';
 import { Movement, MovementSchema } from './schema/movement.schema';
@@ -10,9 +10,9 @@ import { Movement, MovementSchema } from './schema/movement.schema';
   imports: [
     MongooseModule.forFeature([
       { name: Movement.name, schema: MovementSchema },
-      { name: Currency.name, schema: CurrencySchema },
     ]),
     BalanceModule,
+    CurrencyModule,
   ],
   controllers: [MovementController],
   providers: [MovementService],
