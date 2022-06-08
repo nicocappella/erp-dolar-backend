@@ -24,6 +24,17 @@ export class Movement {
 
   @Prop({ type: Number, required: true })
   total: number;
+
+  @Prop({
+    type: MongoSchema.Types.ObjectId,
+    ref: 'Operator',
+    required: true,
+    trim: true,
+  })
+  operator: string;
+
+  @Prop({ type: String })
+  reason: string;
 }
 
 export const MovementSchema = SchemaFactory.createForClass(Movement);

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { CreateOperationDto } from './dto/create-operation.dto';
@@ -17,10 +18,14 @@ export class OperationController {
   constructor(private operationService: OperationService) {}
 
   @Get()
-  async getOperations(@Param(':date') date: string) {
-    return this.operationService.findAll(date);
+  async getOperations(@Query() query?: { date: string }) {
+    return this.operationService.findAll(query.date);
   }
 
+  @Get('closed')
+  async getClosedOperations() {
+    return this.operationService.findClosedOperations();
+  }
   @Get(':id')
   async getOperation(@Param('id') id: string) {
     return this.operationService.findOne(id);
@@ -39,7 +44,6 @@ export class OperationController {
     @Body() createOperationDto: CreateOperationDto,
     @Request() session: Record<string, any>,
   ) {
-    console.log(session.id);
     return this.operationService.createOne(createOperationDto);
   }
 

@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private userService: UserService) {}
 
   async register(registrationData: RegisterUserDto, user: User) {
-    const hashedPassword = await hash(registrationData.password, 10);
+    const hashedPassword = await this.hashPassword(registrationData.password);
 
     try {
       return this.userService.createOne(
@@ -31,17 +31,29 @@ export class AuthService {
   async getAuthenticatedUser(username: string, plainTextPassword: string) {
     try {
       const user = await this.userService.findOne(username);
-      await this.verifyPassword(plainTextPassword, user.password);
+      await this.verifyPassword(true, plainTextPassword, user.password);
       return user;
     } catch (error) {
       throw new BadRequestException('Wrong credentials provided');
     }
   }
 
-  async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+  async verifyPassword(
+    samePassword: boolean,
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
-    if (!isPasswordMatching) {
+    console.log(isPasswordMatching);
+    if (!isPasswordMatching && samePassword) {
       throw new BadRequestException('Wrong credentials provided');
     }
+    if (isPasswordMatching && !samePassword) {
+      throw new BadRequestException('Same password than before');
+    }
+  }
+  async hashPassword(password: string) {
+    const hashedPassword = await hash(password, 10);
+    return hashedPassword;
   }
 }

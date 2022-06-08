@@ -1,15 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
 import { CurrencyService } from 'src/currency/currency.service';
-import {
-  Currency,
-  CurrencyDocument,
-} from 'src/currency/schema/currency.schema';
 import { CreateMovementDto } from './dto/create-movement.dto';
 import { UpdateMovementDto } from './dto/uprate-balance.dto';
 import { Movement, MovementDocument } from './schema/movement.schema';
+import { OperatorService } from 'src/operator/operator.service';
 
 @Injectable()
 export class MovementService {
@@ -17,21 +14,27 @@ export class MovementService {
     @InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
     private balanceService: BalanceService,
     private currencyService: CurrencyService,
+    private operatorService: OperatorService,
   ) {}
 
   async findAll(): Promise<Movement[]> {
-    return this.movementModel.find().populate({ path: 'currency' }).exec();
+    return this.movementModel
+      .find()
+      .populate({ path: 'operator' })
+      .populate({ path: 'currency' })
+      .exec();
   }
 
   async createMany(
     createMovementsDto: CreateMovementDto[],
   ): Promise<Movement[]> {
-    const newMovementsDto: CreateMovementDto[] = [];
+    const newMovementsDto = [];
     await Promise.all(
       createMovementsDto.map(async (movement) => {
-        const { currency, type } = movement;
+        const { currency, type, operator } = movement;
         let { total: executed } = movement;
         await this.currencyService.findById(currency);
+        await this.operatorService.findById(operator);
         executed =
           (type === 'Agregar' && executed > 0) ||
           (type === 'Retirar' && executed < 0)

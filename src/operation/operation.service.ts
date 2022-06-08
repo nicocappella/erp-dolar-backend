@@ -14,9 +14,17 @@ export class OperationService {
     private balanceService: BalanceService,
   ) {}
 
-  async findAll(date: string): Promise<Operation[]> {
+  async findAll(date?: string): Promise<Operation[]> {
+    const dateAfter = new Date(new Date(date).getTime() + 86400000);
     return this.operationModel
-      .find()
+      .find(
+        date && {
+          updatedAt: {
+            $gte: new Date(date),
+            $lte: dateAfter,
+          },
+        },
+      )
       .populate({ path: 'client' })
       .populate({ path: 'operator' })
       .populate({ path: 'listedCurrency' })
@@ -50,7 +58,18 @@ export class OperationService {
       .populate({ path: 'refCurrency' })
       .exec();
   }
+  async findClosedOperations(): Promise<Operation[]> {
+    const dateBefore = new Date();
+    dateBefore.setHours(0, 0, 0, 0);
 
+    return this.operationModel
+      .find({ state: 'Cerrada', updatedAt: { $lt: dateBefore } })
+      .populate({ path: 'client' })
+      .populate({ path: 'operator' })
+      .populate({ path: 'listedCurrency' })
+      .populate({ path: 'refCurrency' })
+      .exec();
+  }
   async createOne(createOperationDto: CreateOperationDto): Promise<Operation> {
     const createOperation = new this.operationModel(createOperationDto);
     try {

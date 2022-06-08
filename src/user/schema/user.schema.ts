@@ -32,7 +32,7 @@ export class User extends Document {
   password: string;
 
   @Prop({
-    type: [String],
+    type: [{ type: String, trim: true }],
     default: ['operator'],
   })
   roles: string[];

@@ -7,7 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateMovementDto } from './dto/create-movement.dto';
+import {
+  CreateMovementDto,
+  CreateMovementsDto,
+} from './dto/create-movement.dto';
 import { UpdateMovementDto } from './dto/uprate-balance.dto';
 import { MovementService } from './movement.service';
 
@@ -21,8 +24,8 @@ export class MovementController {
   }
 
   @Post()
-  async createMovement(@Body() createMovementDto: CreateMovementDto[]) {
-    return this.movementService.createMany(createMovementDto);
+  async createMovements(@Body() createMovementDto: CreateMovementsDto) {
+    return this.movementService.createMany(createMovementDto.movements);
   }
 
   @Patch(':id')

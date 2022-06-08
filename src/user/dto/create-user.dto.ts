@@ -1,5 +1,4 @@
-import { Exclude } from 'class-transformer';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { ArrayMinSize, IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -13,5 +12,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
   readonly roles?: string[];
 }

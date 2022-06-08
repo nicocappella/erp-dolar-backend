@@ -1,8 +1,15 @@
-import { IsMongoId, IsNumber, IsString, IsEnum } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsMongoId,
+  IsNumber,
+  IsString,
+  IsEnum,
+  ValidateNested,
+} from 'class-validator';
 
-enum Type {
-  ADD = 'Agregar',
-  WITHDRAW = 'Retirar',
+enum TypeMovement {
+  'Retirar',
+  'Agregar',
 }
 
 export class CreateMovementDto {
@@ -10,9 +17,21 @@ export class CreateMovementDto {
   readonly currency: string;
 
   @IsString()
-  @IsEnum(Type)
+  @IsEnum(TypeMovement)
   readonly type: string;
 
   @IsNumber()
   readonly total: number;
+
+  @IsMongoId()
+  readonly operator: string;
+
+  @IsString()
+  readonly reason?: string;
+}
+
+export class CreateMovementsDto {
+  @ValidateNested({ each: true })
+  @Type(() => CreateMovementDto)
+  movements: [CreateMovementDto];
 }
