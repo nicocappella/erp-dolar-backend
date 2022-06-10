@@ -16,6 +16,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         const enviroment = configService.get('NODE_ENV');
         const connection = configService.get('MONGO_URI');
         const uri =
+          enviroment === 'development'
             ? `${connection}://${username}:${port}`
             : `${connection}://${username}:${password}@${database}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
         console.log(uri);
