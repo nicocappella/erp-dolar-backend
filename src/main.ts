@@ -11,12 +11,20 @@ import { connection } from 'mongoose';
 const MongoStore = require('connect-mongo');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      credentials: true,
-      origin: '*',
-      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    },
+  const app = await NestFactory.create(
+    AppModule,
+    // {
+    //   cors: {
+    //     credentials: true,
+    //     origin: ['http://localhost:3000'],
+    //     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    //   },
+    // }
+  );
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+    methods: [' GET', 'POST', 'PATCH', 'DELETE'],
   });
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');

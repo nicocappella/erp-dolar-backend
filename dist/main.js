@@ -9,12 +9,11 @@ const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const MongoStore = require('connect-mongo');
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
-        cors: {
-            credentials: true,
-            origin: '*',
-            methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-        },
+    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.enableCors({
+        origin: 'http://localhost:3000',
+        credentials: true,
+        methods: [' GET', 'POST', 'PATCH', 'DELETE'],
     });
     const configService = app.get(config_1.ConfigService);
     const mongoUsername = configService.get('MONGO_USERNAME');
