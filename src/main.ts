@@ -22,7 +22,7 @@ async function bootstrap() {
     // }
   );
   app.enableCors({
-    origin: '190.97.35.75/32',
+    origin: 'http://190.97.35.75/32',
     credentials: true,
     methods: [' GET', 'POST', 'PATCH', 'DELETE'],
   });
