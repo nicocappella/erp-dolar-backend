@@ -7,6 +7,7 @@ import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
+import { connection } from 'mongoose';
 const MongoStore = require('connect-mongo');
 
 async function bootstrap() {
@@ -19,9 +20,16 @@ async function bootstrap() {
   });
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
+  const mongoPassword = configService.get<string>('MONGO_PASSWORD');
   const mongoPort = configService.get<number>('MONGO_PORT');
   const mongoDbName = configService.get<string>('MONGO_DATABASE');
+  const mongoConnection = configService.get<string>('MONGO_URI');
   const sessionSecret = configService.get<string>('SESSION_SECRET');
+  const enviroment = configService.get('NODE_ENV');
+  const uri =
+    enviroment === 'development'
+      ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
+      : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
   app.setGlobalPrefix('/api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -44,7 +52,7 @@ async function bootstrap() {
         secure: false,
       },
       store: MongoStore.create({
-        mongoUrl: `mongodb://${mongoUsername}:${mongoPort}`,
+        mongoUrl: uri,
         dbName: mongoDbName,
         collectionName: 'sessions',
       }),

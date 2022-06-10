@@ -38,12 +38,12 @@ export class UserService {
     throw new NotFoundException('User not found');
   }
   async createOne(createUserDto: CreateUserDto, user: User): Promise<User> {
-    if (user.roles.find((d) => d === 'admin')) {
-      const createUser = new this.userModel(createUserDto);
-      await createUser.save();
-      return createUser;
-    }
-    return null;
+    // if (user.roles.find((d) => d === 'admin')) {
+    const createUser = new this.userModel(createUserDto);
+    await createUser.save();
+    return createUser;
+    // }
+    // return null;
   }
   async updateOne(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     if (updateUserDto.username && !updateUserDto.password) {

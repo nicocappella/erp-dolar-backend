@@ -20,6 +20,7 @@ import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post('signup')
   async createUser(@Body() registerUserDto: RegisterUserDto, @Request() req) {
     return this.authService.register(registerUserDto, req.user);
