@@ -29,7 +29,6 @@ DatabaseModule = __decorate([
                     const uri = enviroment === 'development'
                         ? `${connection}://${username}:${port}`
                         : `${connection}://${username}:${password}@${database}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
-                    console.log(uri);
                     return {
                         uri,
                         dbName: database,

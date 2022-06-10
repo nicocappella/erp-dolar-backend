@@ -38,7 +38,6 @@ let AuthService = class AuthService {
     }
     async verifyPassword(samePassword, plainTextPassword, hashedPassword) {
         const isPasswordMatching = await (0, bcryptjs_1.compare)(plainTextPassword, hashedPassword);
-        console.log(isPasswordMatching);
         if (!isPasswordMatching && samePassword) {
             throw new common_1.BadRequestException('Wrong credentials provided');
         }

@@ -44,7 +44,6 @@ export class AuthService {
     hashedPassword: string,
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
-    console.log(isPasswordMatching);
     if (!isPasswordMatching && samePassword) {
       throw new BadRequestException('Wrong credentials provided');
     }
