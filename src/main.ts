@@ -23,7 +23,7 @@ async function bootstrap() {
     // }
   );
   const apiProx = createProxyMiddleware({
-    target: 'https://erp-dolar-frontend.vercel.app/',
+    target: 'http://3.84.220.161:4000/api/',
     changeOrigin: true,
   });
   app.use(apiProx);
