@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
 import { connection } from 'mongoose';
 const MongoStore = require('connect-mongo');
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -21,6 +22,11 @@ async function bootstrap() {
     //   },
     // }
   );
+  const apiProx = createProxyMiddleware({
+    target: 'https://erp-dolar-frontend.vercel.app/',
+    changeOrigin: true,
+  });
+  app.use(apiProx);
   app.enableCors({
     origin: 'https://erp-dolar-frontend.vercel.app/',
     credentials: true,

@@ -8,10 +8,16 @@ const passport = require("passport");
 const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const MongoStore = require('connect-mongo');
+const http_proxy_middleware_1 = require("http-proxy-middleware");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const apiProx = (0, http_proxy_middleware_1.createProxyMiddleware)({
+        target: 'https://erp-dolar-frontend.vercel.app/',
+        changeOrigin: true,
+    });
+    app.use(apiProx);
     app.enableCors({
-        origin: 'http://190.97.35.75:3000',
+        origin: 'https://erp-dolar-frontend.vercel.app/',
         credentials: true,
         methods: [' GET', 'POST', 'PATCH', 'DELETE'],
     });
