@@ -22,7 +22,7 @@ async function bootstrap() {
     // }
   );
   app.enableCors({
-    origin: 'http://190.97.35.75:3000',
+    origin: 'https://erp-dolar-frontend.vercel.app/',
     credentials: true,
     methods: [' GET', 'POST', 'PATCH', 'DELETE'],
   });
