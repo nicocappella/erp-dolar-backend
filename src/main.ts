@@ -28,7 +28,7 @@ async function bootstrap() {
   // });
   // app.use(apiProx);
   app.enableCors({
-    origin: 'https://erp-dolar-frontend.vercel.app/',
+    origin: ['https://erp-dolar-frontend.vercel.app/'],
     credentials: true,
     methods: [' GET', 'POST', 'PATCH', 'DELETE'],
   });
