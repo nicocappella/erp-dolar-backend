@@ -22,11 +22,11 @@ async function bootstrap() {
     //   },
     // }
   );
-  const apiProx = createProxyMiddleware({
-    target: 'http://3.84.220.161:4000/api/',
-    changeOrigin: true,
-  });
-  app.use(apiProx);
+  // const apiProx = createProxyMiddleware({
+  //   target: 'http://3.84.220.161:4000/api/',
+  //   changeOrigin: true,
+  // });
+  // app.use(apiProx);
   app.enableCors({
     origin: 'https://erp-dolar-frontend.vercel.app/',
     credentials: true,
