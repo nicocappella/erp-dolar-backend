@@ -57,7 +57,6 @@ async function bootstrap() {
         path: '/',
         httpOnly: true,
         secure: false,
-        sameSite: 'lax',
       },
       store: MongoStore.create({
         mongoUrl: uri,
