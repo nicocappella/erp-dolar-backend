@@ -12,13 +12,19 @@ const MongoStore = require('connect-mongo');
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.enableCors({
-    origin: ['https://erp-dolar-frontend.vercel.app/'],
-    credentials: true,
-    methods: [' GET', 'POST', 'PATCH', 'DELETE'],
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      credentials: true,
+      origin: ['https://erp-dolar-frontend.vercel.app/'],
+      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    },
   });
+
+  // app.enableCors({
+  //   origin: ['https://erp-dolar-frontend.vercel.app/'],
+  //   credentials: true,
+  //   methods: [' GET', 'POST', 'PATCH', 'DELETE'],
+  // });
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
   const mongoPassword = configService.get<string>('MONGO_PASSWORD');
