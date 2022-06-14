@@ -52,11 +52,13 @@ async function bootstrap() {
       secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
+      rolling: true,
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
         httpOnly: true,
         secure: false,
+        sameSite: 'none',
       },
       store: MongoStore.create({
         mongoUrl: uri,
