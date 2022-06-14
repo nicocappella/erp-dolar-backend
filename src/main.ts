@@ -44,7 +44,7 @@ async function bootstrap() {
     enviroment === 'development'
       ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
       : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
-  app.setGlobalPrefix('/api');
+  // app.setGlobalPrefix('/api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
