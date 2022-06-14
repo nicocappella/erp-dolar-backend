@@ -56,8 +56,8 @@ async function bootstrap() {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        secure: false,
+        sameSite: 'lax',
       },
       store: MongoStore.create({
         mongoUrl: uri,
