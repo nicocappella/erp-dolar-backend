@@ -10,9 +10,10 @@ import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.g
 import { connection } from 'mongoose';
 const MongoStore = require('connect-mongo');
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
       credentials: true,
       origin: ['https://erp-dolar-frontend.vercel.app'],
@@ -25,6 +26,7 @@ async function bootstrap() {
   //   credentials: true,
   //   methods: [' GET', 'POST', 'PATCH', 'DELETE'],
   // });
+  app.set('trust proxy', 1);
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
   const mongoPassword = configService.get<string>('MONGO_PASSWORD');
@@ -57,7 +59,7 @@ async function bootstrap() {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: 'none',
       },
       store: MongoStore.create({
