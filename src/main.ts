@@ -15,7 +15,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       credentials: true,
-      origin: ['https://erp-dolar-frontend.vercel.app/'],
+      origin: ['https://erp-dolar-frontend.vercel.app'],
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     },
   });
