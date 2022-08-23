@@ -24,7 +24,7 @@ import { APP_GUARD } from '@nestjs/core';
     OperatorModule,
     ClientModule,
     ConfigModule.forRoot({
-      envFilePath: './src/common/envs/.production.env',
+      envFilePath: `./src/config/envs/.${process.env.NODE_ENV}.env`,
       isGlobal: true,
       validationSchema: Joi.object({
         MONGO_USERNAME: Joi.string().required(),

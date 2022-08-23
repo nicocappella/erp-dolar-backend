@@ -35,7 +35,7 @@ AppModule = __decorate([
             operator_module_1.OperatorModule,
             client_module_1.ClientModule,
             config_1.ConfigModule.forRoot({
-                envFilePath: './src/common/envs/.production.env',
+                envFilePath: `./src/config/envs/.${process.env.NODE_ENV}.env`,
                 isGlobal: true,
                 validationSchema: Joi.object({
                     MONGO_USERNAME: Joi.string().required(),

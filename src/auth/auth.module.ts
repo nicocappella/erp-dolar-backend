@@ -2,7 +2,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './services/auth.service';
-import { JwtConstants } from './constants';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UserService } from 'src/user/user.service';
 import { SessionSerializer } from './services/session.serializer';
@@ -14,10 +13,7 @@ import { AuthController } from './auth.controller';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     forwardRef(() => UserModule),
-    JwtModule.register({
-      secret: JwtConstants.secret,
-      signOptions: { expiresIn: '1d' },
-    }),
+    AuthModule,
   ],
   providers: [AuthService, UserService, LocalStrategy, SessionSerializer],
   exports: [AuthService],

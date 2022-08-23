@@ -8,19 +8,18 @@ const passport = require("passport");
 const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const MongoStore = require('connect-mongo');
-const http_proxy_middleware_1 = require("http-proxy-middleware");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const apiProx = (0, http_proxy_middleware_1.createProxyMiddleware)({
-        target: 'https://erp-dolar-frontend.vercel.app/',
-        changeOrigin: true,
+    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
+        cors: {
+            credentials: true,
+            origin: [
+                'https://erp-dolar-frontend.vercel.app',
+                'http://localhost:3000',
+            ],
+            methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+        },
     });
-    app.use(apiProx);
-    app.enableCors({
-        origin: 'https://erp-dolar-frontend.vercel.app/',
-        credentials: true,
-        methods: [' GET', 'POST', 'PATCH', 'DELETE'],
-    });
+    app.set('trust proxy', 1);
     const configService = app.get(config_1.ConfigService);
     const mongoUsername = configService.get('MONGO_USERNAME');
     const mongoPassword = configService.get('MONGO_PASSWORD');
@@ -32,7 +31,6 @@ async function bootstrap() {
     const uri = enviroment === 'development'
         ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
         : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
-    app.setGlobalPrefix('/api');
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         transform: true,
@@ -44,11 +42,13 @@ async function bootstrap() {
         secret: sessionSecret,
         resave: false,
         saveUninitialized: false,
+        rolling: true,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24,
             path: '/',
             httpOnly: true,
-            secure: false,
+            secure: enviroment === 'development' ? false : true,
+            sameSite: 'none',
         },
         store: MongoStore.create({
             mongoUrl: uri,
@@ -58,7 +58,7 @@ async function bootstrap() {
     }));
     app.use(passport.initialize());
     app.use(passport.session());
-    await app.listen(4000);
+    await app.listen(parseInt(process.env.PORT) || 4000);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

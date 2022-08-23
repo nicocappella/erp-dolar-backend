@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class RegisterUserDto {

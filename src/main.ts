@@ -16,16 +16,13 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
       credentials: true,
-      origin: ['https://erp-dolar-frontend.vercel.app'],
+      origin: [
+        'https://erp-dolar-frontend.vercel.app',
+        'http://localhost:3000',
+      ],
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     },
   });
-
-  // app.enableCors({
-  //   origin: ['https://erp-dolar-frontend.vercel.app/'],
-  //   credentials: true,
-  //   methods: [' GET', 'POST', 'PATCH', 'DELETE'],
-  // });
   app.set('trust proxy', 1);
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
@@ -34,12 +31,11 @@ async function bootstrap() {
   const mongoDbName = configService.get<string>('MONGO_DATABASE');
   const mongoConnection = configService.get<string>('MONGO_URI');
   const sessionSecret = configService.get<string>('SESSION_SECRET');
-  const enviroment = configService.get('NODE_ENV');
+  const enviroment = configService.get<string>('NODE_ENV');
   const uri =
     enviroment === 'development'
       ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
       : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
-  // app.setGlobalPrefix('/api');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -59,7 +55,7 @@ async function bootstrap() {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
         httpOnly: true,
-        secure: true,
+        secure: enviroment === 'development' ? false : true,
         sameSite: 'none',
       },
       store: MongoStore.create({
