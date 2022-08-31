@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
 import { CurrencyService } from 'src/currency/currency.service';
 import { CreateMovementDto } from './dto/create-movement.dto';
-import { UpdateMovementDto } from './dto/uprate-balance.dto';
+import { UpdateMovementDto } from './dto/update-movement.dto';
 import { Movement, MovementDocument } from './schema/movement.schema';
 import { OperatorService } from 'src/operator/operator.service';
 
@@ -71,9 +71,15 @@ export class MovementService {
       .findByIdAndDelete(id)
       .exec();
 
-    if (!deletedMovement) {
-      throw new NotFoundException(`Movement ${id} not found`);
+    if (deletedMovement) {
+      const { currency, total, type } = deletedMovement;
+      await this.balanceService.createOrUpdate(currency.toString(), {
+        currency: currency.toString(),
+        executed: type === 0 ? total : -total,
+      });
+
+      return deletedMovement;
     }
-    return deletedMovement;
+    throw new NotFoundException(`Movement ${id} not found`);
   }
 }

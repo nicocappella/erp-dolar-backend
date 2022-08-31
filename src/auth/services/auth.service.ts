@@ -48,7 +48,7 @@ export class AuthService {
       throw new BadRequestException('Wrong credentials provided');
     }
     if (isPasswordMatching && !samePassword) {
-      throw new BadRequestException('Same password than before');
+      throw new BadRequestException('Same password provided');
     }
   }
   async hashPassword(password: string) {

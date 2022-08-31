@@ -19,6 +19,14 @@ export class BalanceService {
   async findAll(): Promise<Balance[]> {
     return this.balanceModel.find().populate({ path: 'currency' }).exec();
   }
+
+  async findOne(_id: string): Promise<Balance> {
+    const balance = await this.balanceModel.findOne({ _id });
+    if (balance) {
+      return balance;
+    }
+    throw new NotFoundException(`Balance ${_id} not found`);
+  }
   async createOne(createBalanceDto: CreateBalanceDto): Promise<Balance> {
     const existingCurrency = await this.currencyModel.findOne({
       currency: createBalanceDto.currency,
@@ -73,7 +81,6 @@ export class BalanceService {
           closed,
         },
       },
-
       {
         new: true,
       },

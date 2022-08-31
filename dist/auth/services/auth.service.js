@@ -42,7 +42,7 @@ let AuthService = class AuthService {
             throw new common_1.BadRequestException('Wrong credentials provided');
         }
         if (isPasswordMatching && !samePassword) {
-            throw new common_1.BadRequestException('Same password than before');
+            throw new common_1.BadRequestException('Same password provided');
         }
     }
     async hashPassword(password) {

@@ -6,23 +6,18 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
-import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
-import { connection } from 'mongoose';
 const MongoStore = require('connect-mongo');
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: {
-      credentials: true,
-      origin: [
-        'https://erp-dolar-frontend.vercel.app',
-        'http://localhost:3000',
-      ],
-      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    },
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors({
+    credentials: true,
+    origin: ['http://localhost:3000', 'https://erp-dolar-frontend.vercel.app'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    optionsSuccessStatus: 200,
   });
+
   app.set('trust proxy', 1);
   const configService = app.get(ConfigService);
   const mongoUsername = configService.get<string>('MONGO_USERNAME');
@@ -43,6 +38,7 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   );
+
   app.use(helmet());
   app.use(
     session({
@@ -67,7 +63,7 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
-  // app.use(csurf());console.log(res);
+  // app.use(csurf());
   await app.listen(parseInt(process.env.PORT) || 4000);
 }
 bootstrap();

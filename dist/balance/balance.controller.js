@@ -24,6 +24,9 @@ let BalanceController = class BalanceController {
     async findBalances() {
         return this.balanceService.findAll();
     }
+    async findBalance(id) {
+        return this.balanceService.findOne(id);
+    }
     async createBalance(createBalanceDto) {
         return this.balanceService.createOne(createBalanceDto);
     }
@@ -40,6 +43,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], BalanceController.prototype, "findBalances", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], BalanceController.prototype, "findBalance", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

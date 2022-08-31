@@ -21,14 +21,12 @@ export class UserController {
   async getUsers(): Promise<User[]> {
     return this.userService.findAll();
   }
+
   @Get(':id')
   async getUser(@Param('username') username: string) {
-    return this.userService.findOne(username);
+    return this.userService.findById(username);
   }
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    return this.userService.deleteOne(id);
-  }
+
   @Patch(':id')
   async updateUser(
     @Param('id') id: string,
@@ -42,6 +40,10 @@ export class UserController {
     return this.userService.addOrRemoveRoleToUser(id, updateUserDto, true);
   }
 
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    return this.userService.deleteOne(id);
+  }
   @Delete('tag/:id')
   async removeRole(
     @Param('id') id: string,

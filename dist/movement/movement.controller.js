@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MovementController = void 0;
 const common_1 = require("@nestjs/common");
 const create_movement_dto_1 = require("./dto/create-movement.dto");
-const uprate_balance_dto_1 = require("./dto/uprate-balance.dto");
+const update_movement_dto_1 = require("./dto/update-movement.dto");
 const movement_service_1 = require("./movement.service");
 let MovementController = class MovementController {
     constructor(movementService) {
@@ -52,7 +52,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, uprate_balance_dto_1.UpdateMovementDto]),
+    __metadata("design:paramtypes", [String, update_movement_dto_1.UpdateMovementDto]),
     __metadata("design:returntype", Promise)
 ], MovementController.prototype, "updateMovement", null);
 __decorate([

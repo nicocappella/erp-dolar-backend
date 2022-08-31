@@ -21,6 +21,11 @@ export class BalanceController {
     return this.balanceService.findAll();
   }
 
+  @Get(':id')
+  async findBalance(@Param('id') id: string): Promise<Balance> {
+    return this.balanceService.findOne(id);
+  }
+
   @Post()
   async createBalance(@Body() createBalanceDto: CreateBalanceDto) {
     return this.balanceService.createOne(createBalanceDto);

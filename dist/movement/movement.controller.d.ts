@@ -1,5 +1,5 @@
 import { CreateMovementsDto } from './dto/create-movement.dto';
-import { UpdateMovementDto } from './dto/uprate-balance.dto';
+import { UpdateMovementDto } from './dto/update-movement.dto';
 import { MovementService } from './movement.service';
 export declare class MovementController {
     private movementService;

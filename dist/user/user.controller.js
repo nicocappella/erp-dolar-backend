@@ -24,16 +24,16 @@ let UserController = class UserController {
         return this.userService.findAll();
     }
     async getUser(username) {
-        return this.userService.findOne(username);
-    }
-    async deleteUser(id) {
-        return this.userService.deleteOne(id);
+        return this.userService.findById(username);
     }
     async updateUser(id, updateUserDto) {
         return this.userService.updateOne(id, updateUserDto);
     }
     async addRole(id, updateUserDto) {
         return this.userService.addOrRemoveRoleToUser(id, updateUserDto, true);
+    }
+    async deleteUser(id) {
+        return this.userService.deleteOne(id);
     }
     async removeRole(id, updateUserDto) {
         return this.userService.addOrRemoveRoleToUser(id, updateUserDto, false);
@@ -53,13 +53,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUser", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "deleteUser", null);
-__decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -75,6 +68,13 @@ __decorate([
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addRole", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "deleteUser", null);
 __decorate([
     (0, common_1.Delete)('tag/:id'),
     __param(0, (0, common_1.Param)('id')),

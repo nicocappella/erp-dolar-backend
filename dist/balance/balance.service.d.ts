@@ -8,6 +8,7 @@ export declare class BalanceService {
     private currencyModel;
     constructor(balanceModel: Model<BalanceDocument>, currencyModel: Model<CurrencyDocument>);
     findAll(): Promise<Balance[]>;
+    findOne(_id: string): Promise<Balance>;
     createOne(createBalanceDto: CreateBalanceDto): Promise<Balance>;
     updateOne(id: string, updateBalanceDto: UpdateBalanceDto): Promise<Balance>;
     deleteOne(id: string): Promise<Balance>;

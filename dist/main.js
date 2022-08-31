@@ -9,15 +9,12 @@ const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const MongoStore = require('connect-mongo');
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
-        cors: {
-            credentials: true,
-            origin: [
-                'https://erp-dolar-frontend.vercel.app',
-                'http://localhost:3000',
-            ],
-            methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-        },
+    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.enableCors({
+        credentials: true,
+        origin: ['http://localhost:3000', 'https://erp-dolar-frontend.vercel.app'],
+        methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+        optionsSuccessStatus: 200,
     });
     app.set('trust proxy', 1);
     const configService = app.get(config_1.ConfigService);

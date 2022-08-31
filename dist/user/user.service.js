@@ -73,7 +73,7 @@ let UserService = class UserService {
         const updatedUser = this.userModel.findByIdAndUpdate(id, {
             [addOrRemove]: { roles: updateUserDto.roles },
         }, { new: true });
-        if (!updateUserDto) {
+        if (!updatedUser) {
             throw new common_1.NotFoundException('User not found');
         }
         return updatedUser;

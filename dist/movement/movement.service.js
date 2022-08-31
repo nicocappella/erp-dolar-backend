@@ -68,10 +68,15 @@ let MovementService = class MovementService {
         const deletedMovement = await this.movementModel
             .findByIdAndDelete(id)
             .exec();
-        if (!deletedMovement) {
-            throw new common_1.NotFoundException(`Movement ${id} not found`);
+        if (deletedMovement) {
+            const { currency, total, type } = deletedMovement;
+            await this.balanceService.createOrUpdate(currency.toString(), {
+                currency: currency.toString(),
+                executed: type === 0 ? total : -total,
+            });
+            return deletedMovement;
         }
-        return deletedMovement;
+        throw new common_1.NotFoundException(`Movement ${id} not found`);
     }
 };
 MovementService = __decorate([

@@ -91,7 +91,7 @@ export class UserService {
       },
       { new: true },
     );
-    if (!updateUserDto) {
+    if (!updatedUser) {
       throw new NotFoundException('User not found');
     }
     return updatedUser;

@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
 import { CurrencyService } from 'src/currency/currency.service';
 import { CreateMovementDto } from './dto/create-movement.dto';
-import { UpdateMovementDto } from './dto/uprate-balance.dto';
+import { UpdateMovementDto } from './dto/update-movement.dto';
 import { Movement, MovementDocument } from './schema/movement.schema';
 import { OperatorService } from 'src/operator/operator.service';
 export declare class MovementService {

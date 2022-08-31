@@ -26,6 +26,13 @@ let BalanceService = class BalanceService {
     async findAll() {
         return this.balanceModel.find().populate({ path: 'currency' }).exec();
     }
+    async findOne(_id) {
+        const balance = await this.balanceModel.findOne({ _id });
+        if (balance) {
+            return balance;
+        }
+        throw new common_1.NotFoundException(`Balance ${_id} not found`);
+    }
     async createOne(createBalanceDto) {
         const existingCurrency = await this.currencyModel.findOne({
             currency: createBalanceDto.currency,
