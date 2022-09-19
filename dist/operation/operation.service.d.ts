@@ -18,4 +18,5 @@ export declare class OperationService {
     deleteMany(ids: string[]): Promise<{
         deletedCount: number;
     }>;
+    private updateBalance;
 }

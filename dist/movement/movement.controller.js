@@ -33,6 +33,9 @@ let MovementController = class MovementController {
     async deleteMovement(id) {
         return this.movementService.deleteOne(id);
     }
+    async deleteOperations(ids) {
+        return this.movementService.deleteMany(ids);
+    }
 };
 __decorate([
     (0, common_1.Get)(),
@@ -62,6 +65,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], MovementController.prototype, "deleteMovement", null);
+__decorate([
+    (0, common_1.Delete)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], MovementController.prototype, "deleteOperations", null);
 MovementController = __decorate([
     (0, common_1.Controller)('movement'),
     __metadata("design:paramtypes", [movement_service_1.MovementService])

@@ -17,10 +17,13 @@ let AuthService = class AuthService {
     constructor(userService) {
         this.userService = userService;
     }
-    async register(registrationData, user) {
+    async register(registrationData, request) {
         const hashedPassword = await this.hashPassword(registrationData.password);
         try {
-            return this.userService.createOne(Object.assign(Object.assign({}, registrationData), { password: hashedPassword }), user);
+            if (request.originalUrl === '/auth/signup' ||
+                request.user.roles.find((d) => d === 'admin')) {
+                return this.userService.createOne(Object.assign(Object.assign({}, registrationData), { password: hashedPassword }));
+            }
         }
         catch (error) {
             throw new common_1.InternalServerErrorException('Something went wrong');

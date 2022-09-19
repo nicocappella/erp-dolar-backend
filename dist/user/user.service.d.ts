@@ -10,10 +10,13 @@ export declare class UserService {
     findAll(): Promise<User[]>;
     findOne(username: string): Promise<User>;
     findById(id: string): Promise<User>;
-    createOne(createUserDto: CreateUserDto, user: User): Promise<User>;
-    updateOne(id: string, updateUserDto: UpdateUserDto): Promise<User>;
+    createOne(createUserDto: CreateUserDto): Promise<User>;
+    updatePassword(id: string, updateUserDto: UpdateUserDto): Promise<User>;
     addOrRemoveRoleToUser(id: string, updateUserDto: UpdateUserDto, add: boolean): Promise<User & import("mongoose").Document<any, any, any> & {
-        _id: any;
+        _id: import("mongoose").Types.ObjectId;
+    }>;
+    updateOne(id: string, updateUserDto: UpdateUserDto, user: User): Promise<User & import("mongoose").Document<any, any, any> & {
+        _id: import("mongoose").Types.ObjectId;
     }>;
     deleteOne(id: string): Promise<User>;
 }

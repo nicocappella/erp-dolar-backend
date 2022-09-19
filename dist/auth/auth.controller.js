@@ -19,13 +19,12 @@ const register_dto_1 = require("./dto/register.dto");
 const cookie_authentication_guard_1 = require("./guards/cookie-authentication.guard");
 const local_auth_guard_1 = require("./guards/local-auth.guard");
 const auth_service_1 = require("./services/auth.service");
-const nestjs_mongoose_exclude_1 = require("nestjs-mongoose-exclude");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async createUser(registerUserDto, req) {
-        return this.authService.register(registerUserDto, req.user);
+        return this.authService.register(registerUserDto, req);
     }
     async login(req) {
         return req.user;
@@ -73,7 +72,6 @@ __decorate([
 ], AuthController.prototype, "logout", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    (0, common_1.UseInterceptors)(new nestjs_mongoose_exclude_1.SanitizeMongooseModelInterceptor()),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 exports.AuthController = AuthController;

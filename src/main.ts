@@ -58,6 +58,9 @@ async function bootstrap() {
         mongoUrl: uri,
         dbName: mongoDbName,
         collectionName: 'sessions',
+        ttl: 24 * 60 * 60,
+        autoRemove: 'native',
+        stringify: true,
       }),
     }),
   );

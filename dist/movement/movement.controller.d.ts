@@ -8,4 +8,8 @@ export declare class MovementController {
     createMovements(createMovementDto: CreateMovementsDto): Promise<import("./schema/movement.schema").Movement[]>;
     updateMovement(id: string, updateMovementDto: UpdateMovementDto): Promise<import("./schema/movement.schema").Movement>;
     deleteMovement(id: string): Promise<import("./schema/movement.schema").Movement>;
+    deleteOperations(ids: string[]): Promise<{
+        deletedCount: number;
+        acknowledged: boolean;
+    }>;
 }

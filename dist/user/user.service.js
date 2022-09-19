@@ -40,12 +40,12 @@ let UserService = class UserService {
         }
         throw new common_1.NotFoundException('User not found');
     }
-    async createOne(createUserDto, user) {
+    async createOne(createUserDto) {
         const createUser = new this.userModel(createUserDto);
         await createUser.save();
         return createUser;
     }
-    async updateOne(id, updateUserDto) {
+    async updatePassword(id, updateUserDto) {
         if (updateUserDto.username && !updateUserDto.password) {
             const existingUser = await this.userModel.findOne({
                 username: updateUserDto.username,
@@ -70,13 +70,22 @@ let UserService = class UserService {
     }
     async addOrRemoveRoleToUser(id, updateUserDto, add) {
         const addOrRemove = add ? '$addToSet' : '$pullAll';
-        const updatedUser = this.userModel.findByIdAndUpdate(id, {
+        const updatedUser = await this.userModel.findByIdAndUpdate(id, {
             [addOrRemove]: { roles: updateUserDto.roles },
         }, { new: true });
         if (!updatedUser) {
             throw new common_1.NotFoundException('User not found');
         }
         return updatedUser;
+    }
+    async updateOne(id, updateUserDto, user) {
+        if (id === user.id || user.roles.includes('admin')) {
+            const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+            if (!updatedUser) {
+                throw new common_1.NotFoundException(`User id: ${id} not found`);
+            }
+            return updatedUser;
+        }
     }
     async deleteOne(id) {
         return this.userModel.findOneAndDelete({ _id: id }).exec();

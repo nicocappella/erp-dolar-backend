@@ -7,22 +7,28 @@ import { UserService } from 'src/user/user.service';
 import { hash, compare } from 'bcryptjs';
 import { RegisterUserDto } from '../dto/register.dto';
 import { User } from 'src/user/schema/user.schema';
+import { Request } from 'express';
+
+interface RequestUser extends Request {
+  user: User;
+}
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService) {}
 
-  async register(registrationData: RegisterUserDto, user: User) {
+  async register(registrationData: RegisterUserDto, request: RequestUser) {
     const hashedPassword = await this.hashPassword(registrationData.password);
-
     try {
-      return this.userService.createOne(
-        {
+      if (
+        request.originalUrl === '/auth/signup' ||
+        request.user.roles.find((d) => d === 'admin')
+      ) {
+        return this.userService.createOne({
           ...registrationData,
           password: hashedPassword,
-        },
-        user,
-      );
+        });
+      }
     } catch (error) {
       throw new InternalServerErrorException('Something went wrong');
     }

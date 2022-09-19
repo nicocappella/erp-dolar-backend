@@ -1,4 +1,4 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class RegisterUserDto {
   @IsString()
@@ -13,4 +13,8 @@ export class RegisterUserDto {
   @IsOptional()
   @IsArray()
   readonly roles?: string[];
+
+  @IsEmail()
+  @IsOptional()
+  readonly email?: string;
 }

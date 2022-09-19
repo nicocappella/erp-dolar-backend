@@ -150,18 +150,7 @@ let OperationService = class OperationService {
             .findByIdAndDelete(id)
             .exec();
         if (deletedOperation) {
-            const { refCurrency, listedCurrency, operation, buy, sell, state } = deletedOperation;
-            const deletedBuy = operation === 'Compra' ? listedCurrency : refCurrency;
-            const deletedSell = operation === 'Compra' ? refCurrency : listedCurrency;
-            const currentState = state === 'Cerrada' ? 'closed' : 'executed';
-            await this.balanceService.createOrUpdate(deletedBuy.toString(), {
-                currency: deletedBuy.toString(),
-                [currentState]: -buy,
-            });
-            await this.balanceService.createOrUpdate(deletedSell.toString(), {
-                currency: deletedSell.toString(),
-                [currentState]: sell,
-            });
+            await this.updateBalance(deletedOperation);
         }
         if (!deletedOperation) {
             throw new common_1.NotFoundException(`Operation ${id} not found`);
@@ -169,15 +158,41 @@ let OperationService = class OperationService {
         return deletedOperation;
     }
     async deleteMany(ids) {
+        const operationDocs = await this.operationModel
+            .find({
+            _id: { $in: ids },
+        })
+            .exec();
         const deleteOperations = await this.operationModel
             .deleteMany({
             _id: { $in: ids },
         })
             .exec();
-        if (!deleteOperations) {
+        if (operationDocs && deleteOperations.deletedCount > 0) {
+            operationDocs.forEach(async (id) => {
+                await this.updateBalance(id);
+            });
+        }
+        if (deleteOperations.deletedCount === 0) {
             throw new common_1.NotFoundException(`Operations not found`);
         }
         return deleteOperations;
+    }
+    async updateBalance(op) {
+        const { refCurrency, listedCurrency, operation, buy, sell, state } = op;
+        const deletedBuy = operation === 'Compra' ? listedCurrency : refCurrency;
+        const deletedSell = operation === 'Compra' ? refCurrency : listedCurrency;
+        const currentState = state === 'Cerrada' ? 'closed' : 'executed';
+        const balBuy = await this.balanceService.createOrUpdate(deletedBuy.toString(), {
+            currency: deletedBuy.toString(),
+            [currentState]: -buy,
+        });
+        const balSell = await this.balanceService.createOrUpdate(deletedSell.toString(), {
+            currency: deletedSell.toString(),
+            [currentState]: sell,
+        });
+        console.log(balBuy, balSell);
+        return op;
     }
 };
 OperationService = __decorate([

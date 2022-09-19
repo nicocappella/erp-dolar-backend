@@ -13,11 +13,11 @@ export class ClientService {
   ) {}
 
   async findAll(paginationQuery: PaginationQueryDto): Promise<Client[]> {
-    const { limit, offset } = paginationQuery;
+    const { limit, skip } = paginationQuery;
     return this.clientModel
       .find()
       .sort({ name: 1 })
-      .skip(offset)
+      .skip(skip)
       .limit(limit)
       .exec();
   }

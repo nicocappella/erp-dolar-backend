@@ -40,4 +40,9 @@ export class MovementController {
   async deleteMovement(@Param('id') id: string) {
     return this.movementService.deleteOne(id);
   }
+
+  @Delete()
+  async deleteOperations(@Body() ids: string[]) {
+    return this.movementService.deleteMany(ids);
+  }
 }

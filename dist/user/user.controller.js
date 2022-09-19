@@ -14,22 +14,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const auth_service_1 = require("../auth/services/auth.service");
+const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const user_service_1 = require("./user.service");
 let UserController = class UserController {
-    constructor(userService) {
+    constructor(userService, authService) {
         this.userService = userService;
+        this.authService = authService;
     }
     async getUsers() {
         return this.userService.findAll();
     }
-    async getUser(username) {
-        return this.userService.findById(username);
+    async getUser(id) {
+        return this.userService.findById(id);
     }
-    async updateUser(id, updateUserDto) {
-        return this.userService.updateOne(id, updateUserDto);
+    async createUser(createUserDto, req) {
+        return this.authService.register(createUserDto, req);
     }
-    async addRole(id, updateUserDto) {
+    async updateUser(id, updateUserDto, req) {
+        return this.userService.updateOne(id, updateUserDto, req.user);
+    }
+    async updatePassword(id, updateUserDto) {
+        return this.userService.updatePassword(id, updateUserDto);
+    }
+    async addOrRemoveRole(id, updateUserDto) {
         return this.userService.addOrRemoveRoleToUser(id, updateUserDto, true);
     }
     async deleteUser(id) {
@@ -47,19 +56,36 @@ __decorate([
 ], UserController.prototype, "getUsers", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('username')),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUser", null);
 __decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createUser", null);
+__decorate([
     (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "updateUser", null);
+__decorate([
+    (0, common_1.Patch)('password/:id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "updateUser", null);
+], UserController.prototype, "updatePassword", null);
 __decorate([
     (0, common_1.Patch)('tag/:id'),
     __param(0, (0, common_1.Param)('id')),
@@ -67,7 +93,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "addRole", null);
+], UserController.prototype, "addOrRemoveRole", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
@@ -85,7 +111,8 @@ __decorate([
 ], UserController.prototype, "removeRole", null);
 UserController = __decorate([
     (0, common_1.Controller)('user'),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService,
+        auth_service_1.AuthService])
 ], UserController);
 exports.UserController = UserController;
 //# sourceMappingURL=user.controller.js.map

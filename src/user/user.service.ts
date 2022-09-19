@@ -30,6 +30,7 @@ export class UserService {
     }
     throw new NotFoundException('User not found');
   }
+
   async findById(id: string): Promise<User> {
     const user = await this.userModel.findById(id);
     if (user) {
@@ -37,15 +38,17 @@ export class UserService {
     }
     throw new NotFoundException('User not found');
   }
-  async createOne(createUserDto: CreateUserDto, user: User): Promise<User> {
-    // if (user.roles.find((d) => d === 'admin')) {
+
+  async createOne(createUserDto: CreateUserDto): Promise<User> {
     const createUser = new this.userModel(createUserDto);
     await createUser.save();
     return createUser;
-    // }
-    // return null;
   }
-  async updateOne(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+
+  async updatePassword(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     if (updateUserDto.username && !updateUserDto.password) {
       const existingUser = await this.userModel.findOne({
         username: updateUserDto.username,
@@ -84,7 +87,7 @@ export class UserService {
     add: boolean,
   ) {
     const addOrRemove = add ? '$addToSet' : '$pullAll';
-    const updatedUser = this.userModel.findByIdAndUpdate(
+    const updatedUser = await this.userModel.findByIdAndUpdate(
       id,
       {
         [addOrRemove]: { roles: updateUserDto.roles },
@@ -95,6 +98,19 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
     return updatedUser;
+  }
+  async updateOne(id: string, updateUserDto: UpdateUserDto, user: User) {
+    if (id === user.id || user.roles.includes('admin')) {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        id,
+        updateUserDto,
+        { new: true },
+      );
+      if (!updatedUser) {
+        throw new NotFoundException(`User id: ${id} not found`);
+      }
+      return updatedUser;
+    }
   }
 
   async deleteOne(id: string): Promise<User> {

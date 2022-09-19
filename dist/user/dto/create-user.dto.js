@@ -32,5 +32,10 @@ __decorate([
     (0, class_validator_1.ArrayMinSize)(1),
     __metadata("design:type", Array)
 ], CreateUserDto.prototype, "roles", void 0);
+__decorate([
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "email", void 0);
 exports.CreateUserDto = CreateUserDto;
 //# sourceMappingURL=create-user.dto.js.map

@@ -16,6 +16,8 @@ import { PassportModule } from '@nestjs/passport';
 import { NODE_ENV } from './app.constants';
 import { CookieAuthenticationGuard } from './auth/guards/cookie-authentication.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { LenderModule } from './lender/lender.module';
+import { LoanModule } from './loan/loan.module';
 
 @Module({
   imports: [
@@ -44,6 +46,8 @@ import { APP_GUARD } from '@nestjs/core';
     CurrencyModule,
     BalanceModule,
     MovementModule,
+    LenderModule,
+    LoanModule,
   ],
   controllers: [AppController],
   providers: [

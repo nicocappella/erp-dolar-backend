@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
-import { ExcludeProperty } from 'nestjs-mongoose-exclude';
 
 export type UserDocument = User & Document;
 
@@ -28,7 +28,6 @@ export class User extends Document {
     trim: true,
     minlength: 8,
   })
-  @ExcludeProperty()
   password: string;
 
   @Prop({
@@ -36,6 +35,14 @@ export class User extends Document {
     default: ['operator'],
   })
   roles: string[];
+
+  @Prop({
+    type: String,
+    match:
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+    unique: true,
+  })
+  email: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

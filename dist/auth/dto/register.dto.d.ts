@@ -3,4 +3,5 @@ export declare class RegisterUserDto {
     readonly username: string;
     readonly password: string;
     readonly roles?: string[];
+    readonly email?: string;
 }

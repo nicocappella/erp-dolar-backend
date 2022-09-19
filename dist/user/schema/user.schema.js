@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = exports.User = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const nestjs_mongoose_exclude_1 = require("nestjs-mongoose-exclude");
 let User = class User extends mongoose_2.Document {
 };
 __decorate([
@@ -40,7 +39,6 @@ __decorate([
         trim: true,
         minlength: 8,
     }),
-    (0, nestjs_mongoose_exclude_1.ExcludeProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
@@ -50,6 +48,14 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], User.prototype, "roles", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: String,
+        match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        unique: true,
+    }),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
 User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

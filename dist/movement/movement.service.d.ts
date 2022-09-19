@@ -15,4 +15,9 @@ export declare class MovementService {
     createMany(createMovementsDto: CreateMovementDto[]): Promise<Movement[]>;
     updateOne(id: string, updateMovementDto: UpdateMovementDto): Promise<Movement>;
     deleteOne(id: string): Promise<Movement>;
+    deleteMany(ids: string[]): Promise<{
+        deletedCount: number;
+        acknowledged: boolean;
+    }>;
+    private updateBalance;
 }

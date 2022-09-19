@@ -17,11 +17,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
-], PaginationQueryDto.prototype, "limit", void 0);
+], PaginationQueryDto.prototype, "skip", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
-], PaginationQueryDto.prototype, "offset", void 0);
+], PaginationQueryDto.prototype, "limit", void 0);
 exports.PaginationQueryDto = PaginationQueryDto;
 //# sourceMappingURL=pagination-query.dto.js.map

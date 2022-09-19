@@ -25,6 +25,8 @@ const passport_1 = require("@nestjs/passport");
 const app_constants_1 = require("./app.constants");
 const cookie_authentication_guard_1 = require("./auth/guards/cookie-authentication.guard");
 const core_1 = require("@nestjs/core");
+const lender_module_1 = require("./lender/lender.module");
+const loan_module_1 = require("./loan/loan.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -55,6 +57,8 @@ AppModule = __decorate([
             currency_module_1.CurrencyModule,
             balance_module_1.BalanceModule,
             movement_module_1.MovementModule,
+            lender_module_1.LenderModule,
+            loan_module_1.LoanModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

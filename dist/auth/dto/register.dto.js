@@ -30,5 +30,10 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     __metadata("design:type", Array)
 ], RegisterUserDto.prototype, "roles", void 0);
+__decorate([
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], RegisterUserDto.prototype, "email", void 0);
 exports.RegisterUserDto = RegisterUserDto;
 //# sourceMappingURL=register.dto.js.map

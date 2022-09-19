@@ -19,7 +19,10 @@ OperationModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
-                { name: operation_schema_1.Operation.name, schema: operation_schema_1.OperationSchema },
+                {
+                    name: operation_schema_1.Operation.name,
+                    schema: operation_schema_1.OperationSchema,
+                },
             ]),
             balance_module_1.BalanceModule,
         ],

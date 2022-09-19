@@ -72,14 +72,40 @@ export class MovementService {
       .exec();
 
     if (deletedMovement) {
-      const { currency, total, type } = deletedMovement;
-      await this.balanceService.createOrUpdate(currency.toString(), {
-        currency: currency.toString(),
-        executed: type === 0 ? total : -total,
-      });
-
+      await this.updateBalance(deletedMovement);
       return deletedMovement;
     }
     throw new NotFoundException(`Movement ${id} not found`);
+  }
+  async deleteMany(
+    ids: string[],
+  ): Promise<{ deletedCount: number; acknowledged: boolean }> {
+    const movenetDocs = await this.movementModel
+      .find({ _id: { $in: ids } })
+      .exec();
+    const deleteMovements = await this.movementModel
+      .deleteMany({
+        _id: { $in: ids },
+      })
+      .exec();
+
+    if (movenetDocs && deleteMovements.deletedCount > 0) {
+      movenetDocs.forEach(async (id) => {
+        await this.updateBalance(id);
+      });
+    }
+    if (deleteMovements.deletedCount === 0) {
+      throw new NotFoundException('Movements not found');
+    }
+    return deleteMovements;
+  }
+
+  private async updateBalance(movement: Movement): Promise<Movement> {
+    const { currency, total, type } = movement;
+    await this.balanceService.createOrUpdate(currency.toString(), {
+      currency: currency.toString(),
+      executed: type === 0 ? total : -total,
+    });
+    return movement;
   }
 }
