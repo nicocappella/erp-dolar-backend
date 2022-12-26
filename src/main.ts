@@ -16,7 +16,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://erp-dolar-frontend.vercel.app',
-      'https://main.d3t0dsf10bwzod.amplifyapp.com/',
+      'https://main.d3t0dsf10bwzod.amplifyapp.com',
     ],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     optionsSuccessStatus: 200,
