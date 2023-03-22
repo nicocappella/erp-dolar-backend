@@ -1,10 +1,11 @@
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateOperationDto } from './dto/create-operation.dto';
 import { UpdateOperationDto } from './dto/update-operation.dto';
 import { OperationService } from './operation.service';
 export declare class OperationController {
     private operationService;
     constructor(operationService: OperationService);
-    getOperations(query?: {
+    getOperations({ limit, skip, date }: PaginationQueryDto & {
         date: string;
     }): Promise<import("./schema/operation.schema").Operation[]>;
     getClosedOperations(): Promise<import("./schema/operation.schema").Operation[]>;

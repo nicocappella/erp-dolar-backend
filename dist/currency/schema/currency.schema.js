@@ -18,11 +18,11 @@ __decorate([
     __metadata("design:type", String)
 ], Currency.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, required: true, trim: true }),
+    (0, mongoose_1.Prop)({ type: String, required: true, trim: true, unique: true }),
     __metadata("design:type", String)
 ], Currency.prototype, "value", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: String, required: true, trim: true }),
+    (0, mongoose_1.Prop)({ type: String, required: true, trim: true, unique: true }),
     __metadata("design:type", String)
 ], Currency.prototype, "symbol", void 0);
 __decorate([
@@ -33,8 +33,36 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Boolean, default: false }),
     __metadata("design:type", Boolean)
 ], Currency.prototype, "listed", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Currency.prototype, "__v", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Currency.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Currency.prototype, "updatedAt", void 0);
 Currency = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Currency);
 exports.Currency = Currency;
 exports.CurrencySchema = mongoose_1.SchemaFactory.createForClass(Currency);

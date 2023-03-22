@@ -24,7 +24,11 @@ let BalanceService = class BalanceService {
         this.currencyModel = currencyModel;
     }
     async findAll() {
-        return this.balanceModel.find().populate({ path: 'currency' }).exec();
+        return this.balanceModel
+            .find()
+            .or([{ closed: { $ne: 0 } }, { executed: { $ne: 0 } }])
+            .populate({ path: 'currency' })
+            .exec();
     }
     async findOne(_id) {
         const balance = await this.balanceModel.findOne({ _id });
@@ -38,7 +42,7 @@ let BalanceService = class BalanceService {
             currency: createBalanceDto.currency,
         });
         if (!existingCurrency) {
-            throw new common_1.NotFoundException(`Balance doesn't exist`);
+            throw new common_1.NotFoundException(`Balance can't create without any currency`);
         }
         const createBalance = new this.balanceModel(createBalanceDto);
         return createBalance.save();
@@ -78,11 +82,6 @@ let BalanceService = class BalanceService {
         });
         if (!existingBalance) {
             return await this.createOne(createBalanceDto);
-        }
-        if (existingBalance.closed === 0 && existingBalance.executed === 0) {
-            await this.balanceModel.findOneAndDelete({
-                currency: existingBalance.currency,
-            });
         }
         return existingBalance;
     }

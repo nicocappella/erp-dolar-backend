@@ -29,5 +29,8 @@ export declare class Balance {
     currency: Currency;
     closed: number;
     executed: number;
+    __v: number;
+    createdAt: string;
+    updatedAt: string;
 }
 export declare const BalanceSchema: MongoSchema<Balance, import("mongoose").Model<Balance, any, any, any, any>, {}, {}, {}, {}, "type", Balance>;

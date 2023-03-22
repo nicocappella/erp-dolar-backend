@@ -22,7 +22,7 @@ let ClientController = class ClientController {
     constructor(clientService) {
         this.clientService = clientService;
     }
-    async findClients(paginationQuery, session) {
+    async findClients(paginationQuery) {
         return this.clientService.findAll(paginationQuery);
     }
     async findClient(id) {
@@ -41,9 +41,8 @@ let ClientController = class ClientController {
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Session)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto, Object]),
+    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], ClientController.prototype, "findClients", null);
 __decorate([

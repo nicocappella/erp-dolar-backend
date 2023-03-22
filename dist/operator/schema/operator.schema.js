@@ -17,8 +17,36 @@ __decorate([
     (0, mongoose_1.Prop)({ name: String, required: true, trim: true, unique: true }),
     __metadata("design:type", String)
 ], Operator.prototype, "name", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Operator.prototype, "__v", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Operator.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Operator.prototype, "updatedAt", void 0);
 Operator = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Operator);
 exports.Operator = Operator;
 exports.OperatorSchema = mongoose_1.SchemaFactory.createForClass(Operator);

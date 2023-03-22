@@ -30,5 +30,8 @@ export declare class Currency {
     symbol: string;
     reference: boolean;
     listed: boolean;
+    __v: number;
+    createdAt: string;
+    updatedAt: string;
 }
 export declare const CurrencySchema: import("mongoose").Schema<Currency, import("mongoose").Model<Currency, any, any, any, any>, {}, {}, {}, {}, "type", Currency>;

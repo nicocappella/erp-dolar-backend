@@ -8,11 +8,16 @@ const passport = require("passport");
 const config_1 = require("@nestjs/config");
 const helmet_1 = require("helmet");
 const MongoStore = require('connect-mongo');
+const app_constants_1 = require("./app.constants");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
         credentials: true,
-        origin: ['http://localhost:3000', 'https://erp-dolar-frontend.vercel.app'],
+        origin: [
+            'http://localhost:3000',
+            'https://erp-dolar-frontend.vercel.app',
+            'https://main.d3t0dsf10bwzod.amplifyapp.com',
+        ],
         methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
         optionsSuccessStatus: 200,
     });
@@ -25,7 +30,7 @@ async function bootstrap() {
     const mongoConnection = configService.get('MONGO_URI');
     const sessionSecret = configService.get('SESSION_SECRET');
     const enviroment = configService.get('NODE_ENV');
-    const uri = enviroment === 'development'
+    const uri = enviroment === app_constants_1.NODE_ENV.DEVELOPMENT
         ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
         : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
     app.useGlobalPipes(new common_1.ValidationPipe({
@@ -35,7 +40,7 @@ async function bootstrap() {
     }));
     app.use((0, helmet_1.default)());
     app.use(session({
-        name: 'nest-js-api',
+        name: 'dolar-erp',
         secret: sessionSecret,
         resave: false,
         saveUninitialized: false,
@@ -44,7 +49,7 @@ async function bootstrap() {
             maxAge: 1000 * 60 * 60 * 24,
             path: '/',
             httpOnly: true,
-            secure: enviroment === 'development' ? false : true,
+            secure: enviroment === app_constants_1.NODE_ENV.DEVELOPMENT ? false : true,
             sameSite: 'none',
         },
         store: MongoStore.create({

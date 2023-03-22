@@ -4,7 +4,16 @@ import { Currency } from 'src/currency/schema/currency.schema';
 
 export type MovementDocument = Movement & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, returned, opts) => {
+      returned.id = returned._id;
+      delete returned._id;
+    },
+  },
+})
 export class Movement {
   @Prop({
     type: MongoSchema.Types.ObjectId,
@@ -35,6 +44,11 @@ export class Movement {
 
   @Prop({ type: String })
   reason: string;
+  @Prop({
+    type: Number,
+    select: false,
+  })
+  __v: number;
 }
 
 export const MovementSchema = SchemaFactory.createForClass(Movement);

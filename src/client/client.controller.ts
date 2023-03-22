@@ -22,7 +22,6 @@ export class ClientController {
   @Get()
   async findClients(
     @Query() paginationQuery: PaginationQueryDto,
-    @Session() session: Record<string, any>,
   ): Promise<Client[]> {
     return this.clientService.findAll(paginationQuery);
   }

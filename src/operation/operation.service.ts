@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Error, Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateOperationDto } from './dto/create-operation.dto';
 import { UpdateOperationDto } from './dto/update-operation.dto';
 import { Operation, OperationDocument } from './schema/operation.schema';
@@ -14,8 +15,11 @@ export class OperationService {
     private balanceService: BalanceService,
   ) {}
 
-  async findAll(date?: string): Promise<Operation[]> {
-    const dateAfter = new Date(new Date(date).getTime() + 86400000);
+  async findAll(limit, skip, date?): Promise<Operation[]> {
+    console.log('limit', limit, 'skip', skip, 'date', date);
+    const dateAfter = date
+      ? new Date(new Date(date).getTime() + 86400000)
+      : undefined;
     return this.operationModel
       .find(
         date && {
@@ -25,6 +29,9 @@ export class OperationService {
           },
         },
       )
+      .sort({ _id: -1 })
+      .limit(limit)
+      .skip(skip)
       .populate({ path: 'client' })
       .populate({ path: 'operator' })
       .populate({ path: 'listedCurrency' })
@@ -145,9 +152,8 @@ export class OperationService {
           : existingOperation.buy;
       const stateUpdated =
         existingOperation.state === 'Cerrada' ? 'closed' : 'executed';
-
       await this.balanceService.createOrUpdate(listedCurr.toString(), {
-        currency: listedCurrency.toString(),
+        currency: listedCurr.toString(),
         [stateUpdated]: amountListedCurrency,
       });
       await this.balanceService.createOrUpdate(refCurr.toString(), {
@@ -213,7 +219,6 @@ export class OperationService {
         [currentState]: sell,
       },
     );
-    console.log(balBuy, balSell);
     return op;
   }
 }

@@ -23,8 +23,11 @@ let OperationService = class OperationService {
         this.operationModel = operationModel;
         this.balanceService = balanceService;
     }
-    async findAll(date) {
-        const dateAfter = new Date(new Date(date).getTime() + 86400000);
+    async findAll(limit, skip, date) {
+        console.log('limit', limit, 'skip', skip, 'date', date);
+        const dateAfter = date
+            ? new Date(new Date(date).getTime() + 86400000)
+            : undefined;
         return this.operationModel
             .find(date && {
             updatedAt: {
@@ -32,6 +35,9 @@ let OperationService = class OperationService {
                 $lte: dateAfter,
             },
         })
+            .sort({ _id: -1 })
+            .limit(limit)
+            .skip(skip)
             .populate({ path: 'client' })
             .populate({ path: 'operator' })
             .populate({ path: 'listedCurrency' })
@@ -135,7 +141,7 @@ let OperationService = class OperationService {
                 : existingOperation.buy;
             const stateUpdated = existingOperation.state === 'Cerrada' ? 'closed' : 'executed';
             await this.balanceService.createOrUpdate(listedCurr.toString(), {
-                currency: listedCurrency.toString(),
+                currency: listedCurr.toString(),
                 [stateUpdated]: amountListedCurrency,
             });
             await this.balanceService.createOrUpdate(refCurr.toString(), {
@@ -191,7 +197,6 @@ let OperationService = class OperationService {
             currency: deletedSell.toString(),
             [currentState]: sell,
         });
-        console.log(balBuy, balSell);
         return op;
     }
 };

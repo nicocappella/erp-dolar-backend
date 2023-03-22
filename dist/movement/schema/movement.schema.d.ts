@@ -31,5 +31,6 @@ export declare class Movement {
     total: number;
     operator: string;
     reason: string;
+    __v: number;
 }
 export declare const MovementSchema: MongoSchema<Movement, import("mongoose").Model<Movement, any, any, any, any>, {}, {}, {}, {}, "type", Movement>;

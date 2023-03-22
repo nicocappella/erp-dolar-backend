@@ -37,5 +37,6 @@ export declare class Operation {
     buy: number;
     sell: number;
     state: string;
+    __v: number;
 }
 export declare const OperationSchema: MongoSchema<Operation, import("mongoose").Model<Operation, any, any, any, any>, {}, {}, {}, {}, "type", Operation>;

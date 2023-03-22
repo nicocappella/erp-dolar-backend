@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 const MongoStore = require('connect-mongo');
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { NODE_ENV } from './app.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -32,7 +33,7 @@ async function bootstrap() {
   const sessionSecret = configService.get<string>('SESSION_SECRET');
   const enviroment = configService.get<string>('NODE_ENV');
   const uri =
-    enviroment === 'development'
+    enviroment === NODE_ENV.DEVELOPMENT
       ? `${mongoConnection}://${mongoUsername}:${mongoPort}`
       : `${mongoConnection}://${mongoUsername}:${mongoPassword}@${mongoDbName}.48zjsbj.mongodb.net/?retryWrites=true&w=majority`;
   app.useGlobalPipes(
@@ -46,7 +47,7 @@ async function bootstrap() {
   app.use(helmet());
   app.use(
     session({
-      name: 'nest-js-api',
+      name: 'dolar-erp',
       secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
@@ -55,7 +56,7 @@ async function bootstrap() {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
         httpOnly: true,
-        secure: enviroment === 'development' ? false : true,
+        secure: enviroment === NODE_ENV.DEVELOPMENT ? false : true,
         sameSite: 'none',
       },
       store: MongoStore.create({

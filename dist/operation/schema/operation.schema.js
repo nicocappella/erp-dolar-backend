@@ -82,8 +82,24 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Operation.prototype, "state", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Operation.prototype, "__v", void 0);
 Operation = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Operation);
 exports.Operation = Operation;
 exports.OperationSchema = mongoose_1.SchemaFactory.createForClass(Operation);

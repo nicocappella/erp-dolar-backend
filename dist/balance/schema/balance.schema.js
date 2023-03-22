@@ -36,8 +36,36 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Number, default: 0 }),
     __metadata("design:type", Number)
 ], Balance.prototype, "executed", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Balance.prototype, "__v", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Balance.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Balance.prototype, "updatedAt", void 0);
 Balance = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Balance);
 exports.Balance = Balance;
 exports.BalanceSchema = mongoose_1.SchemaFactory.createForClass(Balance);

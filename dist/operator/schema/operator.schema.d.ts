@@ -26,5 +26,8 @@ import { Document } from 'mongoose';
 export declare type OperatorDocument = Operator & Document;
 export declare class Operator {
     name: string;
+    __v: number;
+    createdAt: string;
+    updatedAt: string;
 }
 export declare const OperatorSchema: import("mongoose").Schema<Operator, import("mongoose").Model<Operator, any, any, any, any>, {}, {}, {}, {}, "type", Operator>;

@@ -1,10 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, returned, opts) => {
+      returned.id = returned._id;
+      delete returned._id;
+    },
+  },
+})
 export class User extends Document {
   @Prop({
     type: String,
@@ -43,6 +51,21 @@ export class User extends Document {
     unique: true,
   })
   email: string;
+  @Prop({
+    type: Number,
+    select: false,
+  })
+  __v: number;
+
+  @Prop({
+    select: false,
+  })
+  createdAt: string;
+
+  @Prop({
+    select: false,
+  })
+  updatedAt: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

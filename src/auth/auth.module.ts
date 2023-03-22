@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -13,7 +12,6 @@ import { AuthController } from './auth.controller';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     forwardRef(() => UserModule),
-    AuthModule,
   ],
   providers: [AuthService, UserService, LocalStrategy, SessionSerializer],
   exports: [AuthService],

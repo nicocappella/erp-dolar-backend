@@ -6,7 +6,16 @@ import { Currency } from 'src/currency/schema/currency.schema';
 
 export type LenderDocument = Lender & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, returned, opts) => {
+      returned.id = returned._id;
+      delete returned._id;
+    },
+  },
+})
 export class Lender {
   @Prop({
     type: MongoSchema.Types.ObjectId,
@@ -44,6 +53,21 @@ export class Lender {
     enum: ['Cerrada', 'Ejecutada'],
   })
   state: string;
+  @Prop({
+    type: Number,
+    select: false,
+  })
+  __v: number;
+
+  @Prop({
+    select: false,
+  })
+  createdAt: string;
+
+  @Prop({
+    select: false,
+  })
+  updatedAt: string;
 }
 
 export const LenderSchema = SchemaFactory.createForClass(Lender);

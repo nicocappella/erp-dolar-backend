@@ -9,6 +9,7 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateOperationDto } from './dto/create-operation.dto';
 import { UpdateOperationDto } from './dto/update-operation.dto';
 import { OperationService } from './operation.service';
@@ -18,8 +19,11 @@ export class OperationController {
   constructor(private operationService: OperationService) {}
 
   @Get()
-  async getOperations(@Query() query?: { date: string }) {
-    return this.operationService.findAll(query.date);
+  async getOperations(
+    @Query()
+    { limit, skip, date }: PaginationQueryDto & { date: string },
+  ) {
+    return this.operationService.findAll(limit, skip, date);
   }
 
   @Get('closed')

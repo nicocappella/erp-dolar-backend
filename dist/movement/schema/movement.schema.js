@@ -50,8 +50,24 @@ __decorate([
     (0, mongoose_1.Prop)({ type: String }),
     __metadata("design:type", String)
 ], Movement.prototype, "reason", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Movement.prototype, "__v", void 0);
 Movement = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Movement);
 exports.Movement = Movement;
 exports.MovementSchema = mongoose_1.SchemaFactory.createForClass(Movement);

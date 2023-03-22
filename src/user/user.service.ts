@@ -20,11 +20,10 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find().select('-password').exec();
   }
   async findOne(username: string): Promise<User> {
     const user = await this.userModel.findOne({ username }).exec();
-
     if (user) {
       return user;
     }
@@ -32,7 +31,7 @@ export class UserService {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).exec();
     if (user) {
       return user;
     }
@@ -114,6 +113,6 @@ export class UserService {
   }
 
   async deleteOne(id: string): Promise<User> {
-    return this.userModel.findOneAndDelete({ _id: id }).exec();
+    return this.userModel.findOneAndDelete({ id }).exec();
   }
 }

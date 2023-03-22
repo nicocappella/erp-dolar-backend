@@ -7,7 +7,16 @@ import { Lender } from 'src/lender/schema/lender.schema';
 
 export type LoanDocument = Loan & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, returned, opts) => {
+      returned.id = returned._id;
+      delete returned._id;
+    },
+  },
+})
 export class Loan {
   @Prop({
     type: MongoSchema.Types.ObjectId,
@@ -45,6 +54,21 @@ export class Loan {
     enum: ['Cerrada', 'Ejecutada'],
   })
   state: string;
+  @Prop({
+    type: Number,
+    select: false,
+  })
+  __v: number;
+
+  @Prop({
+    select: false,
+  })
+  createdAt: string;
+
+  @Prop({
+    select: false,
+  })
+  updatedAt: string;
 }
 
 export const LoanSchema = SchemaFactory.createForClass(Loan);

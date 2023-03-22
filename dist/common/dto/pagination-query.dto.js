@@ -16,11 +16,15 @@ class PaginationQueryDto {
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], PaginationQueryDto.prototype, "skip", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsPositive)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1),
     __metadata("design:type", Number)
 ], PaginationQueryDto.prototype, "limit", void 0);
 exports.PaginationQueryDto = PaginationQueryDto;

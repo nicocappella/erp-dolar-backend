@@ -7,7 +7,7 @@ export declare class OperationService {
     private operationModel;
     private balanceService;
     constructor(operationModel: Model<OperationDocument>, balanceService: BalanceService);
-    findAll(date?: string): Promise<Operation[]>;
+    findAll(limit: any, skip: any, date?: any): Promise<Operation[]>;
     findByClient(client: string): Promise<Operation[]>;
     findByOperator(operator: string): Promise<Operation[]>;
     findOne(id: string): Promise<Operation>;

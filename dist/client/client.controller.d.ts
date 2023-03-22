@@ -6,7 +6,7 @@ import { Client } from './schema/client.schema';
 export declare class ClientController {
     private clientService;
     constructor(clientService: ClientService);
-    findClients(paginationQuery: PaginationQueryDto, session: Record<string, any>): Promise<Client[]>;
+    findClients(paginationQuery: PaginationQueryDto): Promise<Client[]>;
     findClient(id: string): Promise<Client>;
     createClient(createClientDto: CreateClientDto): Promise<Client>;
     updateClient(id: string, updateClientDto: UpdateClientDto): Promise<Client>;

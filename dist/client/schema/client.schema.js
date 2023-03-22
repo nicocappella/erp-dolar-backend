@@ -17,8 +17,36 @@ __decorate([
     (0, mongoose_1.Prop)({ name: String, required: true, trim: true, unique: true }),
     __metadata("design:type", String)
 ], Client.prototype, "name", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: Number,
+        select: false,
+    }),
+    __metadata("design:type", Number)
+], Client.prototype, "__v", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Client.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        select: false,
+    }),
+    __metadata("design:type", String)
+], Client.prototype, "updatedAt", void 0);
 Client = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true })
+    (0, mongoose_1.Schema)({
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (doc, returned, opts) => {
+                returned.id = returned._id;
+                delete returned._id;
+            },
+        },
+    })
 ], Client);
 exports.Client = Client;
 exports.ClientSchema = mongoose_1.SchemaFactory.createForClass(Client);

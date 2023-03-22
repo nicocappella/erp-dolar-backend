@@ -26,5 +26,8 @@ import { Document } from 'mongoose';
 export declare type ClientDocument = Client & Document;
 export declare class Client {
     name: string;
+    __v: number;
+    createdAt: string;
+    updatedAt: string;
 }
 export declare const ClientSchema: import("mongoose").Schema<Client, import("mongoose").Model<Client, any, any, any, any>, {}, {}, {}, {}, "type", Client>;

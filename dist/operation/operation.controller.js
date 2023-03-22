@@ -21,8 +21,8 @@ let OperationController = class OperationController {
     constructor(operationService) {
         this.operationService = operationService;
     }
-    async getOperations(query) {
-        return this.operationService.findAll(query.date);
+    async getOperations({ limit, skip, date }) {
+        return this.operationService.findAll(limit, skip, date);
     }
     async getClosedOperations() {
         return this.operationService.findClosedOperations();

@@ -7,7 +7,16 @@ import { Operator } from 'src/operator/schema/operator.schema';
 
 export type OperationDocument = Operation & Document;
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, returned, opts) => {
+      returned.id = returned._id;
+      delete returned._id;
+    },
+  },
+})
 export class Operation {
   @Prop({
     type: MongoSchema.Types.ObjectId,
@@ -63,6 +72,11 @@ export class Operation {
     enum: ['Cerrada', 'Ejecutada'],
   })
   state: string;
+  @Prop({
+    type: Number,
+    select: false,
+  })
+  __v: number;
 }
 
 export const OperationSchema = SchemaFactory.createForClass(Operation);

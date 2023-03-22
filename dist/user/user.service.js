@@ -24,7 +24,7 @@ let UserService = class UserService {
         this.authService = authService;
     }
     async findAll() {
-        return this.userModel.find().exec();
+        return this.userModel.find().select('-password').exec();
     }
     async findOne(username) {
         const user = await this.userModel.findOne({ username }).exec();
@@ -34,7 +34,7 @@ let UserService = class UserService {
         throw new common_1.NotFoundException('User not found');
     }
     async findById(id) {
-        const user = await this.userModel.findById(id);
+        const user = await this.userModel.findById(id).exec();
         if (user) {
             return user;
         }
@@ -88,7 +88,7 @@ let UserService = class UserService {
         }
     }
     async deleteOne(id) {
-        return this.userModel.findOneAndDelete({ _id: id }).exec();
+        return this.userModel.findOneAndDelete({ id }).exec();
     }
 };
 UserService = __decorate([
