@@ -7,7 +7,7 @@ export type CurrencyDocument = Currency & Document;
   timestamps: true,
   toJSON: {
     virtuals: true,
-    transform: (doc, returned, opts) => {
+    transform: (doc, returned) => {
       returned.id = returned._id;
       delete returned._id;
     },

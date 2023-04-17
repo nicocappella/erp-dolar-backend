@@ -26,7 +26,7 @@ import { Document, Schema as MongoSchema } from 'mongoose';
 import { Client } from 'src/client/schema/client.schema';
 import { Currency } from 'src/currency/schema/currency.schema';
 import { Operator } from 'src/operator/schema/operator.schema';
-export declare type OperationDocument = Operation & Document;
+export type OperationDocument = Operation & Document;
 export declare class Operation {
     client: Client;
     operator: Operator;
@@ -39,4 +39,8 @@ export declare class Operation {
     state: string;
     __v: number;
 }
-export declare const OperationSchema: MongoSchema<Operation, import("mongoose").Model<Operation, any, any, any, any>, {}, {}, {}, {}, "type", Operation>;
+export declare const OperationSchema: MongoSchema<Operation, import("mongoose").Model<Operation, any, any, any, Document<unknown, any, Operation> & Omit<Operation & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Operation, Document<unknown, {}, import("mongoose").FlatRecord<Operation>> & Omit<import("mongoose").FlatRecord<Operation> & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>>;

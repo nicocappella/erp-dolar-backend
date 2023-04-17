@@ -7,7 +7,7 @@ export type UserDocument = User & Document;
   timestamps: true,
   toJSON: {
     virtuals: true,
-    transform: (doc, returned, opts) => {
+    transform: (doc, returned) => {
       returned.id = returned._id;
       delete returned._id;
     },
@@ -48,9 +48,10 @@ export class User extends Document {
     type: String,
     match:
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-    unique: true,
+    index: { unique: true, sparse: true },
   })
   email: string;
+
   @Prop({
     type: Number,
     select: false,

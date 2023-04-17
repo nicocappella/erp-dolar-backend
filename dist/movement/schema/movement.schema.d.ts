@@ -24,13 +24,17 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document, Schema as MongoSchema } from 'mongoose';
 import { Currency } from 'src/currency/schema/currency.schema';
-export declare type MovementDocument = Movement & Document;
+export type MovementDocument = Movement & Document;
 export declare class Movement {
     currency: Currency;
-    type: number;
+    type: string;
     total: number;
     operator: string;
-    reason: string;
-    __v: number;
+    reason?: string;
+    __v?: number;
 }
-export declare const MovementSchema: MongoSchema<Movement, import("mongoose").Model<Movement, any, any, any, any>, {}, {}, {}, {}, "type", Movement>;
+export declare const MovementSchema: MongoSchema<Movement, import("mongoose").Model<Movement, any, any, any, Document<unknown, any, Movement> & Omit<Movement & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Movement, Document<unknown, {}, import("mongoose").FlatRecord<Movement>> & Omit<import("mongoose").FlatRecord<Movement> & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>>;

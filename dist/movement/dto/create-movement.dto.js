@@ -9,14 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateMovementsDto = exports.CreateMovementDto = void 0;
+exports.CreateMovementsDto = exports.CreateMovementDto = exports.TypeMovement = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 var TypeMovement;
 (function (TypeMovement) {
     TypeMovement[TypeMovement["Retirar"] = 0] = "Retirar";
     TypeMovement[TypeMovement["Agregar"] = 1] = "Agregar";
-})(TypeMovement || (TypeMovement = {}));
+})(TypeMovement = exports.TypeMovement || (exports.TypeMovement = {}));
 class CreateMovementDto {
 }
 __decorate([
@@ -38,6 +38,7 @@ __decorate([
 ], CreateMovementDto.prototype, "operator", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateMovementDto.prototype, "reason", void 0);
 exports.CreateMovementDto = CreateMovementDto;

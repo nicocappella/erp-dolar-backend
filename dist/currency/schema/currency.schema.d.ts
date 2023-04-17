@@ -23,7 +23,7 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Document } from 'mongoose';
-export declare type CurrencyDocument = Currency & Document;
+export type CurrencyDocument = Currency & Document;
 export declare class Currency {
     name: string;
     value: string;
@@ -34,4 +34,8 @@ export declare class Currency {
     createdAt: string;
     updatedAt: string;
 }
-export declare const CurrencySchema: import("mongoose").Schema<Currency, import("mongoose").Model<Currency, any, any, any, any>, {}, {}, {}, {}, "type", Currency>;
+export declare const CurrencySchema: import("mongoose").Schema<Currency, import("mongoose").Model<Currency, any, any, any, Document<unknown, any, Currency> & Omit<Currency & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Currency, Document<unknown, {}, import("mongoose").FlatRecord<Currency>> & Omit<import("mongoose").FlatRecord<Currency> & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>>;

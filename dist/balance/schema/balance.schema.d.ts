@@ -24,7 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Document, Schema as MongoSchema } from 'mongoose';
 import { Currency } from 'src/currency/schema/currency.schema';
-export declare type BalanceDocument = Balance & Document;
+export type BalanceDocument = Balance & Document;
 export declare class Balance {
     currency: Currency;
     closed: number;
@@ -33,4 +33,8 @@ export declare class Balance {
     createdAt: string;
     updatedAt: string;
 }
-export declare const BalanceSchema: MongoSchema<Balance, import("mongoose").Model<Balance, any, any, any, any>, {}, {}, {}, {}, "type", Balance>;
+export declare const BalanceSchema: MongoSchema<Balance, import("mongoose").Model<Balance, any, any, any, Document<unknown, any, Balance> & Omit<Balance & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Balance, Document<unknown, {}, import("mongoose").FlatRecord<Balance>> & Omit<import("mongoose").FlatRecord<Balance> & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>>;

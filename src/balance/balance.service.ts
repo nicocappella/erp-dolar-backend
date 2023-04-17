@@ -32,10 +32,10 @@ export class BalanceService {
     throw new NotFoundException(`Balance ${_id} not found`);
   }
   async createOne(createBalanceDto: CreateBalanceDto): Promise<Balance> {
-    const existingCurrency = await this.currencyModel.findOne({
-      currency: createBalanceDto.currency,
-    });
-
+    console.log(createBalanceDto.currency);
+    const existingCurrency = await this.currencyModel.findById(
+      createBalanceDto.currency,
+    );
     if (!existingCurrency) {
       throw new NotFoundException(`Balance can't create without any currency`);
     }
@@ -90,7 +90,7 @@ export class BalanceService {
       },
     );
     if (!existingBalance) {
-      return await this.createOne(createBalanceDto);
+      return this.createOne(createBalanceDto);
     }
     return existingBalance;
   }

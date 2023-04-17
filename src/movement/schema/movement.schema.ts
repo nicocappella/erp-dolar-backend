@@ -8,7 +8,7 @@ export type MovementDocument = Movement & Document;
   timestamps: true,
   toJSON: {
     virtuals: true,
-    transform: (doc, returned, opts) => {
+    transform: (doc, returned) => {
       returned.id = returned._id;
       delete returned._id;
     },
@@ -29,7 +29,7 @@ export class Movement {
     trim: true,
     enum: ['Agregar', 'Retirar'],
   })
-  type: number;
+  type: string;
 
   @Prop({ type: Number, required: true })
   total: number;
@@ -43,12 +43,13 @@ export class Movement {
   operator: string;
 
   @Prop({ type: String })
-  reason: string;
+  reason?: string;
+
   @Prop({
     type: Number,
     select: false,
   })
-  __v: number;
+  __v?: number;
 }
 
 export const MovementSchema = SchemaFactory.createForClass(Movement);

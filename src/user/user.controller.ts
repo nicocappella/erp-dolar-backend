@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,12 +7,9 @@ import {
   Patch,
   Post,
   Request,
-  SerializeOptions,
-  UseInterceptors,
 } from '@nestjs/common';
 
 import { AuthService } from 'src/auth/services/auth.service';
-import { Public } from 'src/public-route';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schema/user.schema';

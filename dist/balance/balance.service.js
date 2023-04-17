@@ -38,9 +38,8 @@ let BalanceService = class BalanceService {
         throw new common_1.NotFoundException(`Balance ${_id} not found`);
     }
     async createOne(createBalanceDto) {
-        const existingCurrency = await this.currencyModel.findOne({
-            currency: createBalanceDto.currency,
-        });
+        console.log(createBalanceDto.currency);
+        const existingCurrency = await this.currencyModel.findById(createBalanceDto.currency);
         if (!existingCurrency) {
             throw new common_1.NotFoundException(`Balance can't create without any currency`);
         }
@@ -81,7 +80,7 @@ let BalanceService = class BalanceService {
             new: true,
         });
         if (!existingBalance) {
-            return await this.createOne(createBalanceDto);
+            return this.createOne(createBalanceDto);
         }
         return existingBalance;
     }

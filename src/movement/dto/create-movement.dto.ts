@@ -5,9 +5,10 @@ import {
   IsString,
   IsEnum,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 
-enum TypeMovement {
+export enum TypeMovement {
   'Retirar',
   'Agregar',
 }
@@ -27,6 +28,7 @@ export class CreateMovementDto {
   readonly operator: string;
 
   @IsString()
+  @IsOptional()
   readonly reason?: string;
 }
 

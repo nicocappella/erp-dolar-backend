@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { BalanceService } from 'src/balance/balance.service';
 import { CurrencyService } from 'src/currency/currency.service';
 import { CreateMovementDto } from './dto/create-movement.dto';
@@ -12,6 +12,7 @@ import { OperatorService } from 'src/operator/operator.service';
 export class MovementService {
   constructor(
     @InjectModel(Movement.name) private movementModel: Model<MovementDocument>,
+    @InjectConnection() private readonly connection: mongoose.Connection,
     private balanceService: BalanceService,
     private currencyService: CurrencyService,
     private operatorService: OperatorService,
@@ -25,9 +26,7 @@ export class MovementService {
       .exec();
   }
 
-  async createMany(
-    createMovementsDto: CreateMovementDto[],
-  ): Promise<Movement[]> {
+  async createMany(createMovementsDto: CreateMovementDto[]) {
     const newMovementsDto = [];
     await Promise.all(
       createMovementsDto.map(async (movement) => {
@@ -36,10 +35,7 @@ export class MovementService {
         await this.currencyService.findById(currency);
         await this.operatorService.findById(operator);
         executed =
-          (type === 'Agregar' && executed > 0) ||
-          (type === 'Retirar' && executed < 0)
-            ? executed
-            : executed * -1;
+          type === 'Agregar' ? Math.abs(executed) : -Math.abs(executed);
         newMovementsDto.push({ ...movement, total: executed });
       }),
     );
@@ -53,17 +49,49 @@ export class MovementService {
     return createMovements;
   }
 
-  async updateOne(
-    id: string,
-    updateMovementDto: UpdateMovementDto,
-  ): Promise<Movement> {
-    const existingMovement = await this.movementModel
-      .findByIdAndUpdate(id, { $set: updateMovementDto }, { new: true })
-      .exec();
-    if (!existingMovement) {
-      throw new NotFoundException(`Movement ${id} not found`);
-    }
-    return existingMovement;
+  async updateOne(id: string, updateMovementDto: UpdateMovementDto) {
+    const session = await this.connection.startSession();
+    await session.withTransaction(async () => {
+      const oldMovement = await this.movementModel.findById(id);
+      const existingMovement = await this.movementModel
+        .findByIdAndUpdate(
+          id,
+          {
+            $set: {
+              ...updateMovementDto,
+              total:
+                updateMovementDto.type === 'Agregar'
+                  ? Math.abs(updateMovementDto.total)
+                  : -Math.abs(updateMovementDto.total),
+            },
+          },
+          { new: true },
+        )
+        .exec();
+      if (!existingMovement) {
+        throw new NotFoundException(`Movement ${id} not found`);
+      }
+      await this.balanceService.createOrUpdate(
+        oldMovement.currency.toString(),
+        {
+          currency: oldMovement.currency.toString(),
+          executed: oldMovement.type ? -oldMovement.total : oldMovement.total,
+        },
+      );
+      console.log(existingMovement.total);
+      await this.balanceService.createOrUpdate(
+        existingMovement.currency.toString(),
+        {
+          currency: existingMovement.currency.toString(),
+          executed:
+            existingMovement.type === 'Agregar'
+              ? Math.abs(existingMovement.total)
+              : -Math.abs(existingMovement.total),
+        },
+      );
+      return existingMovement;
+    });
+    session.endSession();
   }
 
   async deleteOne(id: string): Promise<Movement> {
@@ -72,7 +100,8 @@ export class MovementService {
       .exec();
 
     if (deletedMovement) {
-      await this.updateBalance(deletedMovement);
+      const { currency, total, type, operator } = deletedMovement;
+      await this.updateBalance({ currency, total: -total, type, operator });
       return deletedMovement;
     }
     throw new NotFoundException(`Movement ${id} not found`);
@@ -104,7 +133,7 @@ export class MovementService {
     const { currency, total, type } = movement;
     await this.balanceService.createOrUpdate(currency.toString(), {
       currency: currency.toString(),
-      executed: type === 0 ? total : -total,
+      executed: total,
     });
     return movement;
   }

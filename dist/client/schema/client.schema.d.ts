@@ -23,11 +23,15 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Document } from 'mongoose';
-export declare type ClientDocument = Client & Document;
+export type ClientDocument = Client & Document;
 export declare class Client {
     name: string;
     __v: number;
     createdAt: string;
     updatedAt: string;
 }
-export declare const ClientSchema: import("mongoose").Schema<Client, import("mongoose").Model<Client, any, any, any, any>, {}, {}, {}, {}, "type", Client>;
+export declare const ClientSchema: import("mongoose").Schema<Client, import("mongoose").Model<Client, any, any, any, Document<unknown, any, Client> & Omit<Client & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Client, Document<unknown, {}, import("mongoose").FlatRecord<Client>> & Omit<import("mongoose").FlatRecord<Client> & {
+    _id: import("mongoose").Types.ObjectId;
+}, never>>;

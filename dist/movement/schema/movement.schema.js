@@ -31,7 +31,7 @@ __decorate([
         trim: true,
         enum: ['Agregar', 'Retirar'],
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Movement.prototype, "type", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: Number, required: true }),
@@ -62,7 +62,7 @@ Movement = __decorate([
         timestamps: true,
         toJSON: {
             virtuals: true,
-            transform: (doc, returned, opts) => {
+            transform: (doc, returned) => {
                 returned.id = returned._id;
                 delete returned._id;
             },
