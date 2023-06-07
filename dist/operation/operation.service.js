@@ -24,7 +24,6 @@ let OperationService = class OperationService {
         this.balanceService = balanceService;
     }
     async findAll(limit, skip, date) {
-        console.log('limit', limit, 'skip', skip, 'date', date);
         const dateAfter = date
             ? new Date(new Date(date).getTime() + 86400000)
             : undefined;

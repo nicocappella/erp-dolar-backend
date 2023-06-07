@@ -16,7 +16,6 @@ export class OperationService {
   ) {}
 
   async findAll(limit, skip, date?): Promise<Operation[]> {
-    console.log('limit', limit, 'skip', skip, 'date', date);
     const dateAfter = date
       ? new Date(new Date(date).getTime() + 86400000)
       : undefined;
